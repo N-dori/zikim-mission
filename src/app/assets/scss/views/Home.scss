@@ -1,0 +1,133 @@
+.intro-container {
+    position: relative;
+
+    .hero-img {
+        width: 100%;
+    }
+
+    .title-container {
+        position: absolute;
+        top: 0em;
+
+        .main-title {
+            margin-bottom: 0;
+        }
+
+        .sub-title {
+            font-size: .8em;
+        }
+
+    }
+
+    .intro-txt-container {
+        text-align: justify;
+    }
+
+    .start-btn {
+
+        appearance: button;
+        backface-visibility: hidden;
+        background-color: #405cf5;
+        border-radius: 6px;
+        border-width: 0;
+        box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+        font-size: 100%;
+        height: 44px;
+        line-height: 1.15;
+        margin: 12px 0 0;
+        outline: none;
+        overflow: hidden;
+        padding: 0 25px;
+        position: relative;
+        text-align: center;
+        text-transform: none;
+        transform: translateZ(0);
+        transition: all .2s, box-shadow .08s ease-in;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 100%;
+        margin-bottom: 2em;
+
+
+    }
+
+    .start-btn:disabled {
+        cursor: default;
+    }
+
+    .start-btn:focus {
+        box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+    }
+}
+
+.ops-btns-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr  1fr 1fr;
+    padding-top: 5em;
+    gap: .5em;
+    padding: 1em;
+    background: linear-gradient(#308f18, #041405);
+.filler{
+    grid-row: 5;
+    margin-bottom: auto;
+}
+
+    .nav-btn {
+        height: 9em;
+        box-shadow: 1px 2px 5px rgba(255, 255, 255, 0.38);
+                       border: 1px solid lightgray;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 1.3em;
+        border: 1px solid #d3d3d380;;  
+      }
+    .nav-btn-txt{
+        background-color: #85858585;
+    }
+
+    .nav-btn1 {
+        background-image: url('../../../../../public/Map-map-marker-icon.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .nav-btn2 {
+        background-image: url('../../../../../public//tuthmosisIII_conq.jpeg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position-y: center;
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .nav-btn3 {
+        // background-image: url('../../../../../public/RAM.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .nav-btn4 {
+        background-image: url('../../../../../public/RAM.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position-y: center;
+        background-position-x: center;
+        grid-column: 2;
+        grid-row: 3;
+
+    }
+
+    .btn-background-image {
+        width: 100%;
+    }
+}

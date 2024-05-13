@@ -1,0 +1,18 @@
+.nav-bar{
+    background-color: #fcfefe;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: .5em;
+   
+    .logo-container{
+        gap:.5em;
+        text-decoration: none;
+        .logo{
+            margin-inline-start: 1em;
+            cursor: pointer;
+            
+        }
+        
+    }
+
+
+}

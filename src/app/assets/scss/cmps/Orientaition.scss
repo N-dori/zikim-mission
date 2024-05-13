@@ -1,0 +1,31 @@
+.map-warrper{
+    height: 90%;
+    .title-container{
+        grid-template-columns: minmax(10px,10px)minmax(20px,1fr);
+        
+        .back-btn{
+          grid-column: 3;
+          grid-row: 1;  
+         
+        }
+    }
+}
+.color-index-container{
+ gap:.5em;
+ font-weight:600 ;
+ margin-bottom: 1em;
+ 
+    .region{
+        gap:.5em;
+        .region-color{
+            width: 5em;
+            height: 1.2em;
+            opacity: 0.8;
+        }
+        
+        .region1{background-color:yellow ;}
+        .region2{background-color: lightblue; }
+        .region3{ background-color: orange;}
+        .region4{ background-color : purple}
+    }
+}
