@@ -1,21 +1,39 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 type Props = {}
 
-export default function OptsBtns({}: Props) {
+export default function OptsBtns({ }: Props) {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <main className="ops-btns-container gc2 grid">
-        <h1 className="title full tac">  קובץ ידיעת הארץ גדוד 8130 </h1>
-        
-    <Link href={'/orientation'} className='nav-btn flex-jc-ac nav-btn1'>
-    <span className='nav-btn-txt'>התמצאות במרחב</span>  </Link>
-    <Link href={'/early_history'}  className='nav-btn flex-jc-ac nav-btn2'><span className='nav-btn-txt'>רצועת עזה היסטוריה קדומה</span></Link>
-    <Link href={'/otef_aza'}  className='nav-btn flex-jc-ac nav-btn3'><span className='nav-btn-txt'>עוטף עזה שטח הפקר </span>  </Link>
-    <Link href={'/179trivia'}  className='nav-btn flex-jc-ac nav-btn4'><span className='nav-btn-txt'>חידון חטיבה 179</span></Link>
-     <div className='filler'></div>
-  </main>
+      <h1 className="title full flex-jc-ac tac">  קובץ ידיעת הארץ גדוד 8130 </h1>
+
+      <Link href={'/orientation'} className='nav-btn flex-jc-ac nav-btn1'>
+        <Image className='nav-btn-img' src={'/Map-map-marker-icon.png'} width={111} height={111} alt={'image of a map'} />
+        <span className='nav-btn-txt'>התמצאות במרחב</span>
+      </Link>
+
+      <Link href={'/early_history'} className='nav-btn flex-jc-ac nav-btn2'>
+        <Image className='nav-btn-img' src={'/tuthmosisIII_conq.jpeg'} width={111} height={111} alt={'image of a map'} />
+        <span className='nav-btn-txt'>רצועת עזה היסטוריה קדומה</span>
+      </Link>
+
+      <Link href={'/otef_aza'} className='nav-btn flex-jc-ac nav-btn3'>
+        <Image className='nav-btn-img' src={'/otef_aza.webp'} width={111} height={111} alt={'image of a map'} />
+        <span className='nav-btn-txt'>עוטף עזה שטח הפקר </span>
+      </Link>
+
+      <Link href={'/179trivia'} className='nav-btn flex-jc-ac nav-btn4'>
+        <Image className='nav-btn-img' src={'/RAM.png'} width={111} height={111} alt={'image of a map'} />
+        <span className='nav-btn-txt'>חידון חטיבה 179</span>
+      </Link>
+      <div className='filler'></div>
+    </main>
   )
 }

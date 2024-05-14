@@ -72,56 +72,69 @@
     gap: .5em;
     padding: 1em;
     background: linear-gradient(#308f18, #041405);
+    .title {
+        color: #fff;
+        background-color: #10111385;
+    }
 .filler{
     grid-row: 5;
     margin-bottom: auto;
 }
 
-    .nav-btn {
+.nav-btn {
+        position: relative;
+        border: 1px solid #d3d3d380;
         height: 9em;
-        box-shadow: 1px 2px 5px rgba(255, 255, 255, 0.38);
-                       border: 1px solid lightgray;
+        background-color: #10111385;
+        border: 1px solid lightgray;
         text-decoration: none;
         color: white;
         font-weight: 600;
         font-size: 1.3em;
-        border: 1px solid #d3d3d380;;  
+        box-shadow: 1px 2px 5px rgba(255, 255, 255, 0.38);
       }
     .nav-btn-txt{
         background-color: #85858585;
+        position: absolute;
+
     }
 
+    .nav-btn-img{
+        width: 80%;
+        height: fit-content;
+    }
     .nav-btn1 {
-        background-image: url('../../../../../public/Map-map-marker-icon.png');
-        background-repeat: no-repeat;
-        background-size: cover;
         grid-column: 1;
         grid-row: 2;
     }
 
     .nav-btn2 {
-        background-image: url('../../../../../public//tuthmosisIII_conq.jpeg');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-y: center;
         grid-column: 2;
         grid-row: 2;
+        .nav-btn-txt{
+            background-color: #85858585;
+            position: absolute;
+            width: 80%;
+    
+        }
     }
 
     .nav-btn3 {
-        // background-image: url('../../../../../public/RAM.png');
-        background-repeat: no-repeat;
-        background-size: contain;
+        .nav-btn-img{
+            width:86%;
+            height: 80%;
+
+        }
         grid-column: 1;
         grid-row: 3;
     }
 
     .nav-btn4 {
-        background-image: url('../../../../../public/RAM.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-y: center;
-        background-position-x: center;
+        .nav-btn-img{
+            width: 80%;
+            height: 80%;
+
+        }
         grid-column: 2;
         grid-row: 3;
 
