@@ -7,8 +7,9 @@ export default function Home() {
   const [isStarted, setIsStarted] = useState(true)
   return (
     isStarted?<main  className="intro-container gc2">
-      <Image width ={100 } height={ 100 }src='/hero.jpg' alt="pic" className="hero-img" layout="responsive"/>
-      <section className="title-container flex-col">
+      <Image width ={100 } height={ 400 }src='/hero.jpg' style={{height:'40%'}} alt="pic" className="hero-img" layout="responsive"/>
+      <div className="quote-container flex-jc-ac"><p className="quote tac">"עם שאינו יודע את עברו, ההווה שלו דל ועתידו לוט בערפל" (יגאל אלון)</p></div>  
+   <section className="title-container flex-col">
         <h1 className="main-title">קובץ ידיעת הארץ </h1>
         <h2 className="sub-title">תעסוקה מבצעית קו זיקים-בארי</h2>
     </section>

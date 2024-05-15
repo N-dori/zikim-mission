@@ -58,7 +58,7 @@ export  function TrivaPreview({question,incrementIndex}: TrivaPreviewProps) {
               )}
           </div> :
               <div className='explanation-container flex-col flex-jc-ac' >
-
+  
                 <p className='explanation-txt '>{question.explanation}</p> 
                 <Image className="explanation-img" src={`/${question.img.url}`} width={100} height={200} alt={'desc-pic'} /> 
                 <span className="explanation-desc">{question.img.desc}</span>

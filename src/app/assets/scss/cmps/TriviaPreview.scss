@@ -1,46 +1,85 @@
-.trivia-question{
-    .question-title{
+.trivia-question {
+    .question-title {
         padding-block: 1em;
         font-size: 2em;
-  color: white;
+        color: white;
         background: linear-gradient(#308f18, #041405);
     }
-    .answers-container{
-        grid-template-columns: 1fr 1fr ;
-        grid-template-rows: 1fr 1fr ;
+
+    .answers-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
         gap: 10px;
-        .btn-answer{
-font-weight: 600;        }
-        .btn-answer1{
-   grid-column: 1;
-   grid-row: 1;
+
+        .btn-answer {
+            font-weight: 600;
+            background-color: #d3d3d375;
+            padding: 15px;
         }
-        .btn-answer2{
+
+        .btn-answer:hover {
+            transition: .5s;
+            background-color: white;
+
+        }
+
+        .btn-answer1 {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .btn-answer2 {
             grid-column: 2;
             grid-row: 1;
 
         }
-        .btn-answer3{
+
+        .btn-answer3 {
             grid-column: 1;
             grid-row: 2;
         }
-        .btn-answer4{
+
+        .btn-answer4 {
             grid-column: 2;
             grid-row: 2;
         }
     }
-    .explanation-container{
-        .explanation-txt{
-            
+
+    .explanation-container {
+        .explanation-txt {
+            font-weight: bold;
+            margin-bottom: 40px;
         }
-        .explanation-desc{
+
+        .explanation-desc {
+            margin-bottom: 40px;
         }
-        .explanation-img{
+
+        .explanation-img {
             width: 100%;
 
         }
-        .next-quetion-btn{
 
+        .next-quetion-btn {
+            background: linear-gradient(#308f18, #041405);
+            width: 100%;
+            font-size: 1.7em;
+            color: #fff;
+            padding: 1em;
         }
+    }
+}
+.end-of-triva-msg-contaoner{
+
+    .end-of-triva-msg{
+        font-size: 3em;
+        margin-bottom: 5em;
+    }
+    .back-btn{
+        background: linear-gradient(#308f18, #041405);
+        width: 100%;
+        font-size: 1.1em;
+        color: #fff;
+        padding: 1em;
     }
 }

@@ -76,6 +76,7 @@ export default function Orientation({ }: Props) {
         <div className='region flex-ac'><span className='region-color region2'></span>מועצה אזורית שער הנגב  </div>
         <div className='region flex-ac'><span className='region-color region3'></span>מועצה אזורית אשכול</div>
         <div className='region flex-ac'><span className='region-color region4'></span>מועצה אזורית מרחבים</div>
+        <span className='Image-desc'>**מסומנים על המפה ישובי הנגב המערבי שהוקמו בעשור שלפני קום המדינה</span>
       </section>
       <Link href={"/"} className='back-btn flex-jc-ac '><BackSvg/></Link>
       </section>
