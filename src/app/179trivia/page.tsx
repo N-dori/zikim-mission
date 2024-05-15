@@ -9,11 +9,14 @@ type Props = {}
 export default function page({ }: Props) {
     const [questIndex, setQuestIndex] = useState(0)
     const [isDone, setIsDone] = useState(true)
-    const [winHeight, setwinHeight] = useState({height: window.innerHeight})
+    const [winHeight, setwinHeight] = useState({height: 450})
 
    
     useEffect(() => {
-        setwinHeight({height:window.innerHeight})
+        if (typeof window !== 'undefined') {
+            // Your window-dependent code here
+            setwinHeight({height:window.innerHeight})
+        }
     }, [])
     
 
