@@ -344,7 +344,7 @@ return (
             <span className="Image-desc">חיל פרשים ערבי בקרב</span>
    
         
-            <Image className="Image" width={150} height={150} src="/reeim_memorial.jpg " alt="" />
+            <Image className="Image" width={150} height={150} src="/reeim_memorial.png " alt="" />
             <span className="Image-desc">מתחם הטבח ברעים ההיסוריה חוזרת על עצמה</span>
    
         <p>אחרי הכיבוש הערבי היהודים והנוצרים המשיכו להתגורר בעיר , לערבים לא הייתה בעיה עם זה כל עוד הם מודעים למעמדם
