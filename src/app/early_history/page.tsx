@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
+import ReeimImage from '../assets/reeimImg/ReeimImage'
 
 type Props = {}
 
@@ -344,11 +345,7 @@ export default function EarlyHistory({ }: Props) {
             <span className="Image-desc">חיל פרשים ערבי בקרב</span>
 
 
-            <Image className="Image" width={150} height={150} onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/101894_reeim_-_memorial_PikiWiki_Israel.jpg/800px-101894_reeim_-_memorial_PikiWiki_Israel.jpg";
-            }} src="/reeim_memorial.png " alt="memorial for the masecere in reeim" />
-            <span className="Image-desc">מתחם הטבח ברעים ההיסוריה חוזרת על עצמה</span>
+                    <ReeimImage/>
 
             <p>אחרי הכיבוש הערבי היהודים והנוצרים המשיכו להתגורר בעיר , לערבים לא הייתה בעיה עם זה כל עוד הם מודעים למעמדם
                 כבני חסות וכל עוד הם משלמים מיסים ונאמנים לעיר. בנוסף השליטים הערבים היו צריכים לתגמל את השבטים הערבים
