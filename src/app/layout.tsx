@@ -3,6 +3,7 @@ import { Alef } from "next/font/google";
 import "../app/assets/scss/main.scss";
 import NavBar from "./cmps/NavBar";
 import Head from "next/head";
+import { AuthProvider } from "./Providers";
 
 const alef = Alef({ subsets:['hebrew'],  weight: ['400'] });
 
@@ -28,7 +29,7 @@ export default function RootLayout({
       
       <body className={`main-layout`} >
      <NavBar/>
-        {children}
+       <AuthProvider>{children}</AuthProvider> 
         
         </body>
     </html>

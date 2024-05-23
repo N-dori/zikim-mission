@@ -1,12 +1,14 @@
-'use client'
 import Image from "next/image";
-import { useState } from "react";
 import OptsBtns from "./cmps/OptsBtns";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
-  const [isStarted, setIsStarted] = useState(true)
+export default async function Home() {
+  const session =await getServerSession(authOptions)
+  console.log('session',session);
+  
   return (
-    isStarted ? <main className="intro-container gc2">
+     <main className="intro-container gc2">
       <Image width={100} height={400} src='/hero.jpg' style={{ height: '40%' }} alt="pic" className="hero-img" layout="responsive" />
       <div className="quote-container flex-jc-ac"><p className="quote tac">"עם שאינו יודע את עברו, ההווה שלו דל ועתידו לוט בערפל" (יגאל אלון)</p></div>
       <section className="title-container flex-col">
@@ -39,11 +41,9 @@ export default function Home() {
        </p>
       </section>
       <div className="flex-jc-ac">
-        <button className="start-btn" onClick={() => setIsStarted(false)}  >מוכנים בואו נתחיל!</button>
+        <button className="start-btn"   >מוכנים בואו נתחיל!</button>
 
       </div>
-    </main> :
-      <OptsBtns />
-
+    </main> 
   );
 }
