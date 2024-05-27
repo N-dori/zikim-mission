@@ -1,16 +1,9 @@
 import Image from "next/image";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
-import { redirect } from 'next/navigation'
+
 import Link from "next/link";
 export default async function Home() {
   
-  const session =await getServerSession(authOptions)
-  const userEmail =session?.user?.email
- 
-  if(userEmail){
-    redirect(`/menu`)
-  }
+
   return (
      <main className="intro-container gc2">
       <Image width={100} height={400} src='/hero.jpg' style={{ height: '40%' }} alt="pic" className="hero-img" layout="responsive" />
@@ -45,9 +38,7 @@ export default async function Home() {
        </p>
       </section>
       <div className="flex-jc-ac">
-    {session?.user?.email? <Link className="start-btn-warpper" href={"/menu"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link> :
-    <Link className="start-btn-warpper" href={"/auth/signup"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link>
-    }
+    <Link className="start-btn-warpper" href={"/menu"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link> 
 
       </div>
     </main> 
