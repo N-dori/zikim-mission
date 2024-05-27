@@ -11,7 +11,6 @@ export default function NavBar({}: Props) {
   
   useEffect(() => {
   }, [])
-  console.log("session?.user?.email",session);
 
 
   return (

@@ -5,14 +5,12 @@ import { redirect } from 'next/navigation'
 import Link from "next/link";
 export default async function Home() {
   
-  // const session =await getServerSession(authOptions)
-  // console.log('session',session);
-
-  // const userEmail =session?.user?.email
+  const session =await getServerSession(authOptions)
+  const userEmail =session?.user?.email
  
-  // if(userEmail){
-  //   redirect(`/menu`)
-  // }
+  if(userEmail){
+    redirect(`/menu`)
+  }
   return (
      <main className="intro-container gc2">
       <Image width={100} height={400} src='/hero.jpg' style={{ height: '40%' }} alt="pic" className="hero-img" layout="responsive" />
