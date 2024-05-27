@@ -18,8 +18,20 @@ const userSceama = new Schema ({
         type: String,
         required:[true , " please provide password"]
     } ,
+    readingProgress:{
+          isEarlyHistoryCompleted:{
+            type: Number,
+            required:[false]
+                } ,
+          isOtefAzaCompleted:{
+            type: Number,
+            required:[false]
+                } ,
+                 
+        }
+    }
 
-},
+,
 {
     timestamps:true
 })

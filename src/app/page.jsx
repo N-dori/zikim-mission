@@ -7,8 +7,10 @@ export default async function Home() {
   
   const session =await getServerSession(authOptions)
   console.log('session',session);
+
+  const userEmail =session?.user?.email
  
-  if(session){
+  if(userEmail){
     redirect(`/menu`)
   }
   return (

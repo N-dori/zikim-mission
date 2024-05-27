@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import ReeimImage from '../assets/reeimImg/ReeimImage'
 import ArticleImage from '../cmps/ArticleImage'
+import { ProgressBar } from '../cmps/ProgressBar'
 
 type Props = {}
 
@@ -9,7 +10,7 @@ export default function EarlyHistory({ }: Props) {
 
     return (
         <main className="main-content flex-col gc2">
-
+        <ProgressBar articel={'early History'}/>
 
             <h2>"לך לעזה..."</h2>
             <ArticleImage width={150} height={150} src={"/gaza_port.jpg"} alt="gaza-port"
