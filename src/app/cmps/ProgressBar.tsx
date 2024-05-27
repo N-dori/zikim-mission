@@ -23,7 +23,7 @@ export function ProgressBar({ articel }: Props) {
         return () => {
             window.removeEventListener('scroll', handelScroll)
             console.log('about to update User Reading Progress ',scrollProcentage);
-            if(scrollProcentage>90)
+            if(scrollProcentage>50)
             updateUserReadingProgress(scrollProcentage)
         }
     }, [scrollProcentage])
@@ -33,7 +33,7 @@ export function ProgressBar({ articel }: Props) {
         try {
         
                 const res = await fetch('http://localhost:3000/api/updateUserProgress', {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: { "Content-type": "appliction/json" },
                     body: JSON.stringify({ email, articel, scrollProcentage })
                 })

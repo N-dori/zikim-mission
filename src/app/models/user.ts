@@ -9,28 +9,24 @@ const userSceama = new Schema ({
         type: String,
         required:[true , " please write your full name"],
         unique:true,
-    } ,
+    },
     battalion :  {
         type: String,
         required:[true , " please provide valid battalion"],
-    }  ,
+    },
     password: {
         type: String,
         required:[true , " please provide password"]
-    } ,
-    readingProgress:{
-          isEarlyHistoryCompleted:{
+    },
+    isEarlyHistoryCompleted:{
             type: Number,
-            required:[false]
-                } ,
-          isOtefAzaCompleted:{
+            required:[true , " please provide number"]
+    },
+    isOtefAzaCompleted:{
             type: Number,
-            required:[false]
-                } ,
-                 
-        }
+            required:[true , " please provide number"]
+    },
     }
-
 ,
 {
     timestamps:true

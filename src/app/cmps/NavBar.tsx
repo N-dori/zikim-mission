@@ -1,5 +1,5 @@
 'use client'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
@@ -27,7 +27,7 @@ export default function NavBar({}: Props) {
            </Link>
           
           {session?.user?.email? 
-          <span>שלום {session?.user?.name}  </span> :
+          <span onClick={()=>signOut}>שלום {session?.user?.name}  </span> :
           <div><Link href={'/auth/login'}>התחבר</Link></div>
           }  
     

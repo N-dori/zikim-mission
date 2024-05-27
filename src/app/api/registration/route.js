@@ -15,7 +15,7 @@ export async function POST (request) {
       if(password !== 'zikim8130bvb')return null
       const hasedPassword = await bcrypt.hash( password , 10 )
 
-     const user =  await User.create({ name , email, battalion ,password:hasedPassword })
+     const user =  await User.create({ name , email, battalion ,password:hasedPassword, isEarlyHistoryCompleted: 0 ,isOtefAzaCompleted:0 })
      return NextResponse.json({message: "User creacted"}, {status: 201 } )
      
    

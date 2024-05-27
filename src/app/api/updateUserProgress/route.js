@@ -11,16 +11,19 @@ export async function PUT(request) {
        
             await connectMongoDB()
             const user = await User.findOne({ email })
-            console.log('user', user);
-
+            console.log('user', user ,articel, scrollProcentage);
             if (articel === 'early History') {
-                user.readingProgress.isEarlyHistoryCompleted = scrollProcentage
+                if(user.isEarlyHistoryCompleted<scrollProcentage){
+                    console.log('user before', user );
+                    await User.findByIdAndUpdate(user._id, { isEarlyHistoryCompleted :scrollProcentage})
+
+                }
             } else {
-                user.readingProgress.isOtefAzaCompleted = scrollProcentage
+                if(user.isOtefAzaCompleted<scrollProcentage){
+                await User.findByIdAndUpdate(user._id, { isOtefAzaCompleted:scrollProcentage  })
             }
-            await User.findByIdAndUpdate(user._id, { readingProgress })
             //  to get only the id
-            
+        }
             
             return NextResponse.json({ user }, { status: 201 })
         

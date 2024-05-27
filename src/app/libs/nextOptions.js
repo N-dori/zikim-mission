@@ -1,5 +1,3 @@
-
-import NextAuth from "next-auth";
 import connectMongoDB from "@/app/libs/mongoDB";
 import User from "@/app/models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -44,6 +42,3 @@ import bcrypt from 'bcryptjs'
         signIn: '/auth/signup'
     }
 }
-const handler = NextAuth(authOptions)
-
-export { handler as GET, handler as POST }
