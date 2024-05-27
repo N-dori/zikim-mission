@@ -1,6 +1,7 @@
 import connectMongoDB from '../../libs/mongoDB'
 import { NextResponse } from 'next/server'
 import User from '../../models/user'
+import bcrypt from 'bcryptjs' 
 
 
 export async function POST (request) {
@@ -8,14 +9,14 @@ export async function POST (request) {
  try {
 
      const { name , email, battalion ,password } = await request.json()
-     console.log('going to create user :', name , email, battalion ,password );
-  
-      console.log('password currect' );
-      
+        
       await connectMongoDB ()
       console.log('going to create user :', name , email, battalion ,password );
-     const user =  await User.create({ name , email, battalion ,password })
-     return NextResponse.json({message: "User creacted" }, {status: 201 } )
+      if(password !== 'zikim8130bvb')return null
+      const hasedPassword = await bcrypt.hash( password , 10 )
+
+     const user =  await User.create({ name , email, battalion ,password:hasedPassword })
+     return NextResponse.json({message: "User creacted"}, {status: 201 } )
      
    
  

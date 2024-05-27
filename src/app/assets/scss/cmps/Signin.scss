@@ -1,0 +1,101 @@
+.login-signup-container {
+
+    padding-top: 7em;
+    
+    .signin-background-image {
+        position: absolute;
+        top: 5.5em;
+        width: 125%;
+        height: 125%;
+        opacity: .4;
+        z-index: 0;
+    }
+
+    .login-modal-container {
+        padding-block: 3em;
+        padding-inline: 1.5em;
+        width: 90%;
+        border: 2px solid #ffffff;
+        z-index: 8;
+        background-color: #222;
+        box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
+        border-radius: 5px;
+
+        .login-signup-title {
+            margin-top: 0;
+            font-size: 1.7em;
+            color: #ffffff;
+        }
+        .sub-title{
+            color: #ffffff;
+            
+        }
+
+        .form-container {
+            width: 100%;
+            gap: 10px;
+
+            .form-input {
+                font-size: 1em;
+                padding: 10px;
+                color: white;
+                font-weight: 600;
+                background-color: #222;
+                border: 1px solid white;
+                border-radius: 15px;
+                box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
+            }
+            .password-container{
+                font-size: 1.1em;
+                padding: 5px;
+                grid-template-columns:1fr 30px ;
+                border: 1px solid white;
+                border-radius: 15px;
+                align-items: center;
+                .eye-svg{
+                 cursor: pointer;
+                 grid-column: 2;
+                }
+                .password-input{
+                    grid-column: 1;
+                    grid-row: 1;
+                    font-size: .9em;
+                    padding-block: 10px;
+                    color: white;
+                    font-weight: 600;
+                    background-color: transparent;
+                    border: none;
+                }
+
+            }
+
+            .form-input:focus {
+                transition: .4s;
+                border: 1px solid #f7cc0c;
+                padding: 18px;
+            }
+
+            .form-select-input {
+
+                color: #999;
+
+
+            }
+.msg{
+    color: #fff;
+}
+            .signin-btn {
+                cursor: pointer;
+                font-size: 1.1em;
+                margin-top: 1em;
+                padding: 10px;
+                color: #222;
+                font-weight: 600;
+                background-color: white;
+                border: 1px solid #222;
+                border-radius: 15px;
+                box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
+            }
+        }
+    }
+}

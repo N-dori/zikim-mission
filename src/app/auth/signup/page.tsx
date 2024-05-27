@@ -1,5 +1,9 @@
 "use client"
-import { signIn } from 'next-auth/react'
+import EyeSvg from '@/app/assets/svgs/EyeSvg'
+import { svgs } from '@/app/assets/svgs/svg'
+import { signIn, useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 export default function signup() {
@@ -9,10 +13,21 @@ export default function signup() {
   const [battalion, setBattalion] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState("")
+  const [isVisible, setIsVisible] = useState(false)
+  
+  const router = useRouter()
+
+  const session = useSession()
+  // console.log('session',session);
+ const handelIsPasswordVisible = () => {
+   setIsVisible(true)
+
+  setTimeout(() => {
+    setIsVisible(false)
+  }, 2000);
+ }
+
   const handelSubmit = async (e: any) => {
-
-
-    console.log(e);
     e.preventDefault()
     e.stopPropagation()
     //   if(e.target.value === 'google') return
@@ -34,7 +49,7 @@ export default function signup() {
         setError("כתובת האימייל קיימת במערכת")
         return
       }
-      
+
       const res = await fetch('http://localhost:3000/api/registration/', {
 
         method: 'POST',
@@ -43,11 +58,18 @@ export default function signup() {
 
       })
       if (res.ok) {
+        //loging in mainly for session
+        const res =  await signIn('credentials', {
+          email, password , redirect:false
+                                             })
         const form = e.target
         form.reset()
+        console.log('user has registered');
+        router.push('/menu')
+
       } else {
         console.log('user registration failed');
-        setError("  פרטים אינם נכונים נסה שוב")
+        setError("  פרטים אינם נכונים נסה שוב יש להירשם עם הסיסמא הנכונה")
 
       }
 
@@ -57,21 +79,28 @@ export default function signup() {
     }
 
   }
+
   return (
-    <main className='login-signup-container gc2'>
-      <section className='login-modal-container'>
-        <h1 className='login-signup-title'>רישום זריז ומתחילים</h1>
+    <main className='login-signup-container full flex-jc-ac'>
+      <Image className='signin-background-image' src={'/RAM.png'} width={100} height={100} alt='' />
+
+      <section className='login-modal-container flex-col flex-jc-ac '>
+        <h1 className='login-signup-title '>רישום זריז ומתחילים</h1>
+        <h2 className='sub-title tac'>ודאו שאתם נרשמים עם הסיסמא שקיבלתם</h2>
+
         <form className='form-container flex-col' onSubmit={handelSubmit}>
           <input onChange={(e) => setName(e.target.value)} className='form-input' type='text' placeholder='שם מלא' ></input>
           <input onChange={(e) => setEmail(e.target.value)} className='form-input' type='email' placeholder=' אימייל' ></input>
-          <select onChange={(e) => { setBattalion(e.target.value) }} >
-            <option value={"בחר גדוד"}>בחר גדוד</option>
+          <select className='form-input form-select-input' onChange={(e) => { setBattalion(e.target.value) }} >
+            <option hidden>בחר גדוד</option>
             {battalions.map((bet, i) => <option key={i} value={bet}>{bet}</option>)}
-
           </select>
-          <input onChange={(e) => setPassword(e.target.value)} className='form-input' type='password' placeholder='סיסמא' ></input>
-          {error && <span>{error}</span>}
-          <button type='submit'>הרשם</button>
+         <div className='password-container grid'>
+          <EyeSvg handelIsPasswordVisible={handelIsPasswordVisible}></EyeSvg>
+          <input onChange={(e) => setPassword(e.target.value)} className='password-input' type={isVisible?'text':'password'} placeholder='סיסמא' ></input>
+          </div> 
+          {error && <span className='msg'>{error}</span>}
+          <button type='submit' className='signin-btn'>הרשם</button>
         </form>
 
       </section>

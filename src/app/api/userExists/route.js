@@ -9,7 +9,10 @@ export async function POST (request) {
 
      const {  email  } = await request.json()
     await connectMongoDB ()
-    const user =  await User.findOne({ email }).select('_id')
+     const user =  await User.findOne({ email })
+
+   //  to get only the id
+   //  const user =  await User.findOne({ email }).select('_id')
 
     console.log('user', user  );
  

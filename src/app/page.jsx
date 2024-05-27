@@ -1,11 +1,12 @@
 import Image from "next/image";
-import OptsBtns from "./cmps/OptsBtns";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
-
+import Link from "next/link";
 export default async function Home() {
+  
   const session =await getServerSession(authOptions)
   console.log('session',session);
+ 
   
   return (
      <main className="intro-container gc2">
@@ -41,7 +42,9 @@ export default async function Home() {
        </p>
       </section>
       <div className="flex-jc-ac">
-        <button className="start-btn"   >מוכנים בואו נתחיל!</button>
+    {session?.user?.email? <Link className="start-btn-warpper" href={"/menu"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link> :
+    <Link className="start-btn-warpper" href={"/auth/signup"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link>
+    }
 
       </div>
     </main> 

@@ -28,8 +28,10 @@ export default function RootLayout({
     <html className={alef.className} lang="en">
       
       <body className={`main-layout`} >
-     <NavBar/>
-       <AuthProvider>{children}</AuthProvider> 
+       <AuthProvider>
+          <NavBar/>
+        {children}
+        </AuthProvider> 
         
         </body>
     </html>
