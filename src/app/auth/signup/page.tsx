@@ -39,7 +39,7 @@ export default function signup() {
       return
     }
     try {
-      const userExist = await fetch('http://localhost:3000/api/userExists', {
+      const userExist = await fetch('api/userExists', {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },
         body: JSON.stringify({ email })
@@ -50,7 +50,7 @@ export default function signup() {
         return
       }
 
-      const res = await fetch('http://localhost:3000/api/registration/', {
+      const res = await fetch('api/registration/', {
 
         method: 'POST',
         headers: { "Content-type": "appliction/json" },

@@ -32,7 +32,7 @@ export function ProgressBar({ articel }: Props) {
         const email = session?.data?.user?.email
         try {
         
-                const res = await fetch('http://localhost:3000/api/updateUserProgress', {
+                const res = await fetch('api/updateUserProgress', {
                     method: 'PUT',
                     headers: { "Content-type": "appliction/json" },
                     body: JSON.stringify({ email, articel, scrollProcentage })
