@@ -47,7 +47,7 @@ export default function Orientation({ }: Props) {
   
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_SECOUND_GOOGLE_MAPS_API_KEY ||process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey:"AIzaSyAyXSt_CdZz5-IAbYw8bqmkGK1Z4vsDjtg" 
   })
 
   const onLoad = useCallback(function callback(map: any) {
