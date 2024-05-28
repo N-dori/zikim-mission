@@ -7,19 +7,20 @@ import React, { useEffect, useState } from 'react'
 type Props = {}
 
 export default function OptsBtns({ }: Props) {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-
-  }, [])
   const session = useSession()
   const router = useRouter()
 
-  
-  console.log(session.data);
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    console.log(session.data);
   if(!session.data){
 router.push('/auth/signup')
 
   }
+  }, [session.data])
+
+  
+
 
   return (
     <main className="ops-btns-container gc2 grid">

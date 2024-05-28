@@ -5,8 +5,8 @@
     .signin-background-image {
         position: absolute;
         top: 5.5em;
-        width: 125%;
-        height: 125%;
+        width: 99%;
+        height: 99%;
         opacity: .4;
         z-index: 0;
     }
@@ -71,7 +71,7 @@
 
             .form-input:focus {
                 transition: .4s;
-                border: 1px solid #f7cc0c;
+                border: 1px solid #e7d89a;
                 padding: 18px;
             }
 
