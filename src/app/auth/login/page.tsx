@@ -1,4 +1,5 @@
 "use client"
+import EyeSvg from '@/app/assets/svgs/EyeSvg'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,8 +13,15 @@ export default function login(props: Props) {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const router = useRouter()
+  const [isVisible, setIsVisible] = useState(false)
 
-
+  const handelIsPasswordVisible = () => {
+    setIsVisible(true)
+ 
+   setTimeout(() => {
+     setIsVisible(false)
+   }, 2000);
+  }
   const handelSubmit = async (e: any) => {
     e.preventDefault()
     e.stopPropagation()
@@ -58,8 +66,11 @@ export default function login(props: Props) {
         <h1 className='login-signup-title'>התחברות</h1>
         <form className='form-container flex-col' onSubmit={handelSubmit}>
           <input onChange={(e) => setEmail(e.target.value)} className='form-input' type='email' placeholder='אימייל ' ></input>
-          
-          <input onChange={(e) => setPassword(e.target.value)} className='form-input' type='password' placeholder='סיסמא' ></input>
+       
+          <div className='password-container grid'>
+          <EyeSvg handelIsPasswordVisible={handelIsPasswordVisible}></EyeSvg>
+          <input onChange={(e) => setPassword(e.target.value)} className='password-input' type={isVisible?'text':'password'} placeholder='סיסמא' ></input>
+          </div> 
           {error? <span className='msg err-msg'>{error}</span>:<></>}
           <Link className='msg' href={'/auth/signup'}>לא רשום עדיין? לחץ כאן</Link>
           <button type='submit' className='signin-btn'>התחבר</button>
