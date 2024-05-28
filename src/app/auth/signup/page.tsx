@@ -3,6 +3,7 @@ import EyeSvg from '@/app/assets/svgs/EyeSvg'
 import { svgs } from '@/app/assets/svgs/svg'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -104,7 +105,7 @@ export default function signup() {
           {error && <span className='msg'>{error}</span>}
           <button type='submit' className='signin-btn'>הרשם</button>
         </form>
-
+        <Link className='registered-msg msg clean' href={'/auth/login'}> רשום?  לחץ כאן להתחברות </Link>
       </section>
     </main>
   )
