@@ -39,7 +39,7 @@ import bcrypt from 'bcryptjs'
         strategy: 'jwt',
         maxAge: 60 * 5
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
     pages: {
         signIn: '/auth/signup'
     }
