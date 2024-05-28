@@ -12,7 +12,7 @@ export default function OptsBtns({ }: Props) {
   }, [])
   const session = useSession()
   const router = useRouter()
-  if(!session){
+  if(!session.data){
 router.push('/auth/signup')
   }
 
