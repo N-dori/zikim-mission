@@ -25,7 +25,7 @@ export default function login(props: Props) {
       return
     }
     try {
-      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/userExists':'api/userExists'
+      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/userExists':'https://zikim-mission.vercel.app/api/userExists'
       const userExist = await fetch(url, {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },
