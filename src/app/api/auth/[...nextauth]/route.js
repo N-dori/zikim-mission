@@ -37,7 +37,7 @@ import bcrypt from 'bcryptjs'
     ],
     session: {
         strategy: 'jwt',
-        maxAge: 60 * 5
+        maxAge: 60 * 60 * 24 * 30 * 3 // 60 seconds * 60 minutes * 24 hours * 30 days * 3 month
     },
     secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
     pages: {
