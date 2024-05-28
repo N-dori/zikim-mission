@@ -1,14 +1,20 @@
 'use client'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
-
 type Props = {}
 
 export default function OptsBtns({ }: Props) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+  const session = useSession()
+  const router = useRouter()
+  if(!session){
+router.push('/auth/signup')
+  }
 
   return (
     <main className="ops-btns-container gc2 grid">

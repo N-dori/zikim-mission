@@ -25,7 +25,7 @@ export default function login(props: Props) {
       return
     }
     try {
-      const userExist = await fetch('http://localhost:3000/api/userExists', {
+      const userExist = await fetch('api/userExists', {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },
         body: JSON.stringify({ email })
