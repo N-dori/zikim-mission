@@ -33,7 +33,7 @@ export function ProgressBar({ articel }: Props) {
         try {
             const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/updateUserProgress':'https://zikim-mission.vercel.app/api/updateUserProgress'
 
-                const res = await fetch('api/updateUserProgress', {
+                const res = await fetch(url, {
                     method: 'PUT',
                     headers: { "Content-type": "appliction/json" },
                     body: JSON.stringify({ email, articel, scrollProcentage })
