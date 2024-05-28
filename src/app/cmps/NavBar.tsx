@@ -26,8 +26,8 @@ export default function NavBar({}: Props) {
            </Link>
           
           {session?.user?.email? 
-          <span onClick={()=>signOut}>שלום {session?.user?.name}  </span> :
-          <div><Link href={'/auth/login'}>התחבר</Link></div>
+          <span className='greeting' onClick={()=>signOut}>שלום {session?.user?.name}  </span> :
+          <div><Link href={'/auth/login'} className='login-link'>התחבר</Link></div>
           }  
     
             </div>

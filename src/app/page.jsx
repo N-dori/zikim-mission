@@ -38,7 +38,7 @@ export default async function Home() {
        </p>
       </section>
       <div className="flex-jc-ac">
-    <Link className="start-btn-warpper" href={"/menu"}><button className="start-btn"   >מוכנים בואו נתחיל!</button></Link> 
+    <Link className="start-btn-warpper flex-jc-ac" href={"/menu"}>מוכנים בואו נתחיל!</Link> 
 
       </div>
     </main> 
