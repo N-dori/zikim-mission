@@ -39,7 +39,8 @@ export default function signup() {
       return
     }
     try {
-      const userExist = await fetch('api/userExists', {
+      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/userExists':'https://zikim-mission.vercel.app/api/userExists'
+      const userExist = await fetch(url, {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },
         body: JSON.stringify({ email })
@@ -49,8 +50,9 @@ export default function signup() {
         setError("כתובת האימייל קיימת במערכת")
         return
       }
+      const urlRegistration = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/registration':'https://zikim-mission.vercel.app/api/registration'
 
-      const res = await fetch('api/registration/', {
+      const res = await fetch(urlRegistration, {
 
         method: 'POST',
         headers: { "Content-type": "appliction/json" },

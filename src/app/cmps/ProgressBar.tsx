@@ -31,7 +31,8 @@ export function ProgressBar({ articel }: Props) {
     const updateUserReadingProgress = async (scrolled:number) => {
         const email = session?.data?.user?.email
         try {
-        
+            const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/updateUserProgress':'https://zikim-mission.vercel.app/api/updateUserProgress'
+
                 const res = await fetch('api/updateUserProgress', {
                     method: 'PUT',
                     headers: { "Content-type": "appliction/json" },
