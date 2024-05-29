@@ -25,10 +25,7 @@ export default function Orientation({ }: Props) {
   const [isMarkerActive, setIsMarkerActive] = useState<null | string>(null)
   const [wikiPrase, setWikiPrase] = useState<null | string>(null)
 
-useEffect(() => {
-console.log('process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
-}, [process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY])
 
 
   const getWikiPrase = async (txt: string) => {
@@ -56,7 +53,7 @@ console.log('process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',process.env.NEXT_PUBLI
   })
 
   const onLoad = useCallback(function callback(map: any) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
+ 
     const bounds = new window.google.maps.LatLngBounds(center);
     // map.fitBounds(bounds);
     map.setZoom(zoom)
