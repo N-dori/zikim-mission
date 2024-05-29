@@ -25,6 +25,10 @@ export default function Orientation({ }: Props) {
   const [isMarkerActive, setIsMarkerActive] = useState<null | string>(null)
   const [wikiPrase, setWikiPrase] = useState<null | string>(null)
 
+useEffect(() => {
+console.log('process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
+}, [process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY])
 
 
   const getWikiPrase = async (txt: string) => {
@@ -45,8 +49,9 @@ export default function Orientation({ }: Props) {
     setWikiPrase(text.extract)
   }
   
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
+  const { isLoaded } = useJsApiLoader(
+    {
+    id:'google-map-script',
     googleMapsApiKey:process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY||'',
   })
 
