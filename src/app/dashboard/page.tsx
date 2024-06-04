@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import UsersList from '../cmps/UsersList'
 import { getUrl } from '../utils/utils'
 
 const getData = async () => {
   try {
-  const url =  process.env.NODE_ENV === 'development' ? 
-        'http://localhost:3000/api/get_users' : 
-        'http://localhost:3000/api/get_users';
-    const res = await fetch(url, {
+  // const url =  process.env.NODE_ENV === 'development' ? 
+  //       'http://localhost:3000/api/get_users' : 
+  //       'http://localhost:3000/api/get_users';
+    const res = await fetch('http://localhost:3000/api/get_users', {
       method: 'GET',
       headers: { "Content-type": "application/json" },
     });
@@ -42,9 +42,9 @@ const users = await getData()
   return (
     <main className='gc2'>
     <h1 className='title'>רשימת מתשמשים </h1>
-
+    <Suspense fallback={<div>Loading...</div>}>
     <UsersList users={users}/>
-
+  </Suspense>
     </main>
   )
 }
