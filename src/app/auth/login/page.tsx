@@ -1,5 +1,6 @@
 "use client"
 import EyeSvg from '@/app/assets/svgs/EyeSvg'
+import { getUrl } from '@/app/utils/utils'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -33,7 +34,7 @@ export default function login(props: Props) {
       return
     }
     try {
-      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/userExists':'https://zikim-mission.vercel.app/api/userExists'
+      const url = getUrl('userExists')
       const userExist = await fetch(url, {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },

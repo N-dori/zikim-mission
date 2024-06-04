@@ -1,13 +1,22 @@
 import Image from "next/image";
-
+import { getServerSession } from "next-auth/next"
 import Link from "next/link";
+
 export default async function Home() {
   
 
   return (
      <main className="intro-container gc2">
-      <Image width={100} height={400} src='/hero.jpg' style={{ height: '40%' }} alt="pic" className="hero-img" layout="responsive" />
-      <div className="quote-container flex-jc-ac"><p className="quote tac">"עם שאינו יודע את עברו, ההווה שלו דל ועתידו לוט בערפל" (יגאל אלון)</p></div>
+  <div style={{ position: 'relative', width: '100%', height: '40%' }}>
+    <Image
+    className="hero-img"
+      src="/hero.jpg"
+      alt="Hero image"
+      fill
+      style={{ objectFit: 'cover' }}
+    />
+  </div>    
+    <div className="quote-container flex-jc-ac"><p className="quote tac">"עם שאינו יודע את עברו, ההווה שלו דל ועתידו לוט בערפל" (יגאל אלון)</p></div>
       <section className="title-container flex-col">
         <h1 className="main-title">קובץ ידיעת הארץ </h1>
         <h2 className="sub-title">תעסוקה מבצעית קו זיקים-בארי</h2>

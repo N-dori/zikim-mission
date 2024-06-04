@@ -12,7 +12,7 @@ export default function OptsBtns({ }: Props) {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    console.log(session.data);
+    // console.log(session.data);
   if(!session.data){
 router.push('/auth/signup')
 

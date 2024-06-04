@@ -2,13 +2,25 @@
 import React from 'react'
 import ArticleImage from '../cmps/ArticleImage'
 import { ProgressBar } from '../cmps/ProgressBar'
+import { getServerSession } from 'next-auth'
+import { AuthOptions } from "next-auth";
+import { authOptions } from '../api/auth/[...nextauth]/authOptions';
+import { Tuser } from '../types/types';
+import { getUser } from '../utils/utils';
 
 type Props = {}
 
-export default function otefAaza({ }: Props) {
+export default async function otefAaza({ }: Props) {
+
+    const session = await getServerSession(authOptions as AuthOptions)
+    console.log('server session', session);
+    let user :Tuser
+    if (session) {
+    user = await getUser(session)
+    }
     return (
         <main className="main-content flex-col gc2">
-               <ProgressBar articel={'otef'}/>
+               <ProgressBar user={user} articel={'otef'}/>
             <h2>עוטף עזה שטח הפקר</h2>
 
             <p>פה ננסה להבין האם נכון לכנות את השטח שבו פועל הגדוד עוטף עזה?  איך הפך שטח בתחום הנגב המערבי בו הוקמו קיבוצים, מושבים וישובים קהילתיים, שחלקם בעיצוב הגבולות של מדינת ישראל היה גדול לאין שיעור, לשטח הפקר? ולמה הוא נקרא עוטף עזה?  למה לא  למשל יישובי הנגב המערבי? ולמה לא עוטף ישראל? , ולמה לא  נקרא בכל שם שמקשר את חבל הארץ הזה, למדינת ישראל. איך הפך עוטף עזה להיות שטח ישראלי שבשמו הוא קשור לישות אחרת ?  האם יכול להיות שהשם עוטף עזה השפיע על האופן שבו התייחסנו לשטח הזה? כאן ננסה לשאול גם, איך הפכה העיר עזה שהייתה משך מאות בשנים מקום מרכזי וחשוב מבחינה מסחרית ומדינית, למקום שאף אחד לא רוצה קשר אליו? ישראל לא רוצה שום קשר אליו, ונראה שגם מצריים. איך הפכה עזה למקום שכוח כה אפל שולט בו? </p>

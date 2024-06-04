@@ -1,11 +1,12 @@
 "use client"
 import EyeSvg from '@/app/assets/svgs/EyeSvg'
 import { svgs } from '@/app/assets/svgs/svg'
+import { getUrl } from '@/app/utils/utils'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function signup() {
   const [name, setName] = useState<string>("")
@@ -19,7 +20,17 @@ export default function signup() {
   const router = useRouter()
 
   const session = useSession()
-  // console.log('session',session);
+
+ useEffect(() => {
+  
+if(session){
+  if(session?.data?.user?.email){
+    router.push('/menu')
+
+  }
+}
+ }, [session?.data?.user?.email])
+ 
  const handelIsPasswordVisible = () => {
    setIsVisible(true)
 
@@ -40,7 +51,7 @@ export default function signup() {
       return
     }
     try {
-      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/userExists':'https://zikim-mission.vercel.app/api/userExists'
+      const url =  getUrl('userExists')
       const userExist = await fetch(url, {
         method: 'POST',
         headers: { "Content-type": "appliction/json" },
@@ -51,7 +62,7 @@ export default function signup() {
         setError("כתובת האימייל קיימת במערכת")
         return
       }
-      const urlRegistration = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/registration':'https://zikim-mission.vercel.app/api/registration'
+      const urlRegistration =  getUrl('registration')
 
       const res = await fetch(urlRegistration, {
 
@@ -77,7 +88,7 @@ export default function signup() {
       }
 
     } catch (err) {
-      console.log('had a problom...');
+      console.log('had a problom...',err);
 
     }
 

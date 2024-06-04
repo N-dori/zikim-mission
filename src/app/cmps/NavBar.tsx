@@ -29,7 +29,11 @@ export default function NavBar({}: Props) {
           <span className='greeting' onClick={()=>signOut}>שלום {session?.user?.name}  </span> :
           <div><Link href={'/auth/login'} className='login-link'>התחבר</Link></div>
           }  
-    
+          {
+           session?.user?.email === 'dori.nadav@gmail.com' ?  
+            <div><Link href={'/dashboard'} className='login-link'>משתמשים</Link></div>:
+            <></>
+          }
             </div>
 
 

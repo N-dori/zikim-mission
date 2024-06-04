@@ -1,37 +1,71 @@
 "use client"
-import { useSession } from 'next-auth/react'
-import React, { useEffect, useState ,useMemo } from 'react'
-type Props = {
-    articel: string
+import React, { useEffect, useRef, useState  } from 'react'
+import {Tuser} from '../types/types'
+import { getUrl } from '../utils/utils'
+import { usePathname, useSearchParams  } from 'next/navigation'
+type ProgressBarProps = {
+    articel: string,
+    user:Tuser|null
+    
 }
-export function ProgressBar({ articel }: Props) {
+export function ProgressBar({user, articel }: ProgressBarProps) {
+    //for displaying the most updated value
+    const [scrollPescentage, setScrollPescentage] = useState(0)
+    // to keep trak after the value
+    const scrollPescentageRef = useRef(0); 
 
+    const pathname = usePathname()
+    const searchParams= useSearchParams()
 
-    const [scrollProcentage, setScrollProcentage] = useState(0)
-    const session = useSession()
-
+   
     useEffect(() => {
         const handelScroll = () => {
             const winScroll = document.documentElement.scrollTop
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight
             const scrolled = (winScroll / height) * 100
-    
-            setScrollProcentage(scrolled)
+            
+            scrollPescentageRef.current=scrolled
+            setScrollPescentage(scrolled)
         }
-        window.addEventListener('scroll', handelScroll)
-  
-        return () => {
-            window.removeEventListener('scroll', handelScroll)
-            console.log('about to update User Reading Progress ',scrollProcentage);
-            if(scrollProcentage>50)
-            updateUserReadingProgress(scrollProcentage)
-        }
-    }, [scrollProcentage])
 
-    const updateUserReadingProgress = async (scrolled:number) => {
-        const email = session?.data?.user?.email
+        window.addEventListener('scroll', handelScroll)
+        return () => {
+     
+            window.removeEventListener('scroll', handelScroll) 
+            }
+        
+    }, [scrollPescentage])
+
+  useEffect(() => {
+//pathname,searchParams trigger this func when the path is changing
+    return () => {
+
+            if(scrollPescentageRef.current>0){
+                if(articel === 'early History'){   
+                            if(scrollPescentageRef.current > +(user.isEarlyHistoryCompleted)){
+                                console.log('about to update isEarlyHistoryCompleted Reading Progress ', +(user.isEarlyHistoryCompleted ))
+                                updateUserReadingProgress(scrollPescentageRef.current)
+                                
+                            }
+                        }else {
+                            if(scrollPescentageRef.current > +(user.isOtefAzaCompleted)){
+                                console.log('about to update isOtefAzaCompleted Reading Progress ', +(user.isEarlyHistoryCompleted ))
+                                updateUserReadingProgress(scrollPescentageRef.current)
+                
+                            }
+                        } 
+
+            }
+    
+    };
+  }, [pathname,searchParams]);
+
+    
+
+    const updateUserReadingProgress = async (scrollProcentage:number) => {
+        const email = user.email
         try {
-            const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/updateUserProgress':'https://zikim-mission.vercel.app/api/updateUserProgress'
+            const url = getUrl('updateUserProgress')
 
                 const res = await fetch(url, {
                     method: 'PUT',
@@ -54,7 +88,7 @@ export function ProgressBar({ articel }: Props) {
         <section className='Progress-bar-container'
         >
             <div className='progress-field' style={{
-                width: `${scrollProcentage}%`
+                width: `${scrollPescentage}%`
             }}></div>
         </section>
     )
