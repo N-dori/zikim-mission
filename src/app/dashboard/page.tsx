@@ -6,7 +6,7 @@ const getData = async () => {
   try {
   const url =  process.env.NODE_ENV === 'development' ? 
         'http://localhost:3000/api/get_users' : 
-        'api/get_users';
+        'http://localhost:3000/api/get_users';
     const res = await fetch(url, {
       method: 'GET',
       headers: { "Content-type": "application/json" },
