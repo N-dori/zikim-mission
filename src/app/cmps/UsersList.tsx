@@ -29,10 +29,10 @@ export default function UsersList({ users }: UsersListProps) {
      <span className='user-createdAt gc6'>
        נוצר 
     </span>
-            {users.map(user =>
+            {users? users.map(user =>
                 <UserPriview key={user.email} user={user} />
 
-            )}
+            ):<></>}
 
         </section> : <div>Loading.....</div>
     )

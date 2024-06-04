@@ -1,13 +1,29 @@
-import React, { Suspense } from 'react'
+"use client"
+import React, { Suspense, useEffect, useState } from 'react'
 import UsersList from '../cmps/UsersList'
 import { getUrl } from '../utils/utils'
+import { Tuser } from '../types/types';
+
+
+
+export default  function dashboard() {
+const [users, setUsers] = useState()
+useEffect(() => {
+ getusers()
+
+}, [])
+const getusers = async () => {
+  const user= await getData()
+  setUsers(user)
+  return user
+}
 
 const getData = async () => {
   try {
-  // const url =  process.env.NODE_ENV === 'development' ? 
-  //       'http://localhost:3000/api/get_users' : 
-  //       'http://localhost:3000/api/get_users';
-    const res = await fetch('http://localhost:3000/api/get_users', {
+  const url =  process.env.NODE_ENV === 'development' ? 
+        'http://localhost:3000/api/get_users' : 
+        'https://zikim-mission.vercel.app/api/get_users';
+    const res = await fetch(url, {
       method: 'GET',
       headers: { "Content-type": "application/json" },
     });
@@ -15,12 +31,6 @@ const getData = async () => {
     if (!res.ok) {
       console.error(`Error: ${res.status} ${res.statusText}`);
       throw new Error(`HTTP error! status: ${res.status}`);
-    }
-
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error(`Unexpected content type: ${contentType}`);
-      throw new TypeError("Received non-JSON response");
     }
 
     const data = await res.json();
@@ -35,16 +45,15 @@ const getData = async () => {
     throw error;
   }
 };
-
-export default async function dashboard() {
-const users = await getData()
-
   return (
     <main className='gc2'>
     <h1 className='title'>רשימת מתשמשים </h1>
-    <Suspense fallback={<div>Loading...</div>}>
-    <UsersList users={users}/>
-  </Suspense>
-    </main>
+    {users?
+    // <Suspense fallback={<div>Loading...</div>}>
+      <UsersList users={users}/>:<></>
+    // </Suspense>
+    
+    }
+  </main>
   )
 }
