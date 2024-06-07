@@ -30,7 +30,7 @@ export default function NavBar({}: Props) {
           <div><Link href={'/auth/login'} className='login-link'>התחבר</Link></div>
           }  
           {
-           session?.user?.email === 'dori.nadav@gmail.com' ?  
+           session?.user?.email === 'dori.nadav@gmail.com'||'tuviab613@gmail.com' ?  
             <div><Link href={'/dashboard'} className='login-link'>משתמשים</Link></div>:
             <></>
           }

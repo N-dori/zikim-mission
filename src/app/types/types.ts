@@ -1,4 +1,5 @@
 export interface Tuser {
+        _id:string,
         name :string,
         email :string,
         battalion :string,
@@ -9,3 +10,6 @@ export interface Tuser {
     
     
 }
+export type Tfilter = {
+        name: ''
+    }

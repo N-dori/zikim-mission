@@ -11,7 +11,7 @@ export default function UserPriview({user}: UserPriviewProps) {
     <span className='item user-name gc1'>
        {user.name}
     </span>
-    <span className='item user-email gc2'>
+    <span title={user.email} className='item user-email gc2'>
        {user.email}
     </span>
     <span className='item user-battalion gc3'>
@@ -23,9 +23,7 @@ export default function UserPriview({user}: UserPriviewProps) {
      <span className='item user-isOtefAzaCompleted gc5'>
        {Math.round(+(user.isOtefAzaCompleted))}
     </span>
-     <span className='item user-createdAt gc6'>
-       {user.createdAt}
-    </span>
+    
         </>
   )
 }

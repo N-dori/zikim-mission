@@ -8,6 +8,20 @@ export const getUrl = (endPoint: string) => {
     console.log(`Constructed URL: ${url}`);
     return url;
 };
+export const handelForm = ({ target }) => {
+    const field = target.name
+    let value = target.value
+
+    switch (target.type) {
+        case 'range':
+            value = +value
+            break;
+        case 'checkbox':
+            value = target.checked
+            break;
+    }
+    return {[field]: value }
+}
 
 export const getUser = async (session) => {
     var currntUser :Tuser

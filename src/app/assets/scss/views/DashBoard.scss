@@ -1,5 +1,31 @@
+
+.filter-from-container{
+    gap:6px;
+    background-color: lightblue;
+    padding: 2em;
+     .form-input{
+        padding: 6px;
+    }
+}
 .users-list-container{
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr .5fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap:10px;
+    .total-students{
+        grid-column: 1/-1;
+    }
+
+    .user-email {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+        cursor: pointer;
+      }
+    .user-email:hover {
+        overflow: inherit;
+        text-overflow: none;
+        max-width: none; 
+      }
+
    
 }
