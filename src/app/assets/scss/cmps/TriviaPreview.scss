@@ -1,3 +1,19 @@
+.game-type-btns-container{
+    align-items: center;
+    gap:10px;
+    .game-type-btn{
+        width: 100%;
+        border-radius: 10px;
+        background: linear-gradient(#308f18, #041405);
+        font-size: 1.7em;
+        padding: 15px;
+        color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;    }
+        
+    }
+.trivia-intro{
+    margin-bottom: 10em;
+}
 .trivia-question {
     .question-title {
         padding-block: 1em;
@@ -6,40 +22,41 @@
         background: linear-gradient(#308f18, #041405);
     }
 
-    .answers-container {
+    .options-container {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
         gap: 10px;
 
-        .btn-answer {
+        .btn-option {
+            min-height: 100px;
             font-weight: 600;
-            background-color: #d3d3d375;
+            
             padding: 15px;
         }
 
-        .btn-answer:hover {
+        .btn-option:hover {
             transition: .5s;
-            background-color: white;
+            // background-color: white;
 
         }
 
-        .btn-answer1 {
+        .btn-option1 {
             grid-column: 1;
             grid-row: 1;
         }
 
-        .btn-answer2 {
+        .btn-option2 {
             grid-column: 2;
             grid-row: 1;
 
         }
 
-        .btn-answer3 {
+        .btn-option3 {
             grid-column: 1;
             grid-row: 2;
         }
 
-        .btn-answer4 {
+        .btn-option4 {
             grid-column: 2;
             grid-row: 2;
         }
@@ -67,6 +84,21 @@
             color: #fff;
             padding: 1em;
         }
+    }
+}
+.end-of-triva-msg-conatiner{
+    justify-content: start;
+    .end-of-triva-msg{
+        font-size: 3em;
+    }
+
+    .back-btn{
+        background: linear-gradient(#308f18, #041405);
+        width: 100%;
+        font-size: 1.1em;
+        color: #fff;
+        padding: 1em;
+        margin-block: 1em;
     }
 }
 .end-of-triva-msg-contaoner{

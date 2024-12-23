@@ -1,11 +1,12 @@
-import { Tuser } from "../types/types"
+import { Tanswer, Tuser } from "../types/types"
+
 export const getUrl = (endPoint: string) => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 
         'http://localhost:3000' : 
         'https://zikim-mission.vercel.app';
-
+    if(endPoint === "")return baseUrl
     const url = `${baseUrl}/api/${endPoint}`;
-    console.log(`Constructed URL: ${url}`);
+    // console.log(`Constructed URL: ${url}`);
     return url;
 };
 export const handelForm = ({ target }) => {
@@ -38,3 +39,25 @@ export const getUser = async (session) => {
          return user
     }
 }
+export function makeId(length = 6) {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    var txt = ''
+    for (var i = 0; i < length; i++) {
+      txt += possible.charAt(Math.floor(Math.random() * possible.length))
+    }
+    return txt
+  }
+  export  const removeDuplicates = (arr: Tanswer[]): Tanswer[] => {
+    const seen = new Set<string>();
+    return arr.filter(item => {
+        const key = `${item.playerId}-${item.questionId}`;
+        if (seen.has(key)) {
+            return false;
+        } else {
+            seen.add(key);
+            return true;
+        }
+    });
+};
+
+  

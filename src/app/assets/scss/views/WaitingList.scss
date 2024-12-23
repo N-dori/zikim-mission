@@ -1,0 +1,36 @@
+.trivia-waiting-room-warpper{
+    // border: 4px solid transparent;
+    // border-image: linear-gradient(45deg, rgb(34, 34, 34), rgb(59, 208, 22));
+    // border-image-slice: 1;
+    grid-column: 1/-1;
+    height: 95vh;
+    background-color: #4a993a3b;
+.waiting-room-container {
+    padding: 1em;
+
+    .players-container {
+        flex-wrap: wrap;
+        gap: 2em;
+    }
+
+    .start-game-btn-container {
+        position: relative;
+     
+
+        .start-game-btn {
+            line-height: 1em;
+            padding: 1em;
+            font-size: 1em;
+            color: #fff;
+            font-weight: 600;
+            background: linear-gradient(45deg, #308f18, #041405);
+            width: 100% ;
+            letter-spacing: 1px;
+            line-height: 28px;
+          
+        }
+    }
+
+
+}
+}

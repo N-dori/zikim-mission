@@ -1,3 +1,9 @@
+.w100{
+    width: 100%;
+}
+.m-0{
+    margin: 0;
+}
 .tac{
     text-align: center;
 }
@@ -63,6 +69,15 @@
 }
 .gap1{
     gap:1em
+}
+.gap2{
+    gap:2em
+}
+.gap3{
+    gap:3em
+}
+.pointer{
+    cursor: pointer;
 }
 .clean{
     list-style-type: none;

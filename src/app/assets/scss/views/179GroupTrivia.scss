@@ -1,0 +1,136 @@
+.group-trivia-container {
+    .explnation-txt {
+        padding-inline-start: 14px;
+    }
+
+    .group-name-form-container {
+        border: 2px solid #308f18;
+        padding: 15px;
+
+        .group-name-input {
+            font-size: 1em;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 10px solid transparent;
+            border-image: linear-gradient(45deg, #308f18, #041405) 30;
+            border-image-slice: 1;
+            border-radius: 10px;
+        }
+
+        .open-room-btn {
+            font-size: 1em;
+            border-radius: 10px;
+            background: linear-gradient(#308f18, #041405);
+            font-size: 1.7em;
+            padding: 15px;
+            color: #fff;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+
+        }
+
+        .error-txt {
+            color: red;
+            font-size: 1em;
+        }
+    }
+
+}
+
+.timer-circle-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+
+    .timer-info {
+        .txt {
+            font-size: 1.5em;
+        }
+    }
+}
+
+.timer-circle-svg {
+    position: absolute;
+}
+
+.timer-circle {
+    fill: none;
+    stroke: #308f18;
+    /* Circle color */
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.1s linear;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.score-table-container {
+    .headline {
+        text-decoration: underline;
+    }
+
+    .currect-answer {
+        background-color: #ade7ad;
+        padding: 1em;
+       
+    }
+
+    .score-table-warpper {
+        width: 95%;
+        gap: 1em;
+        margin-block: 2em;
+
+        .player-container {
+            transition: 1.5s;
+            gap: 1em;
+            width: 100%;
+
+            .place {
+                font-size: 2em;
+                align-items: end;
+                margin-inline-start: .5em;
+            }
+
+            .player-name {
+                border-radius: 15px 0px 15px 0px;
+                width: 100%;
+                background: linear-gradient(30deg, #308f18 30%, #041405);
+                font-size: 1em;
+                color: #fff;
+            }
+        }
+
+    }
+
+    .btns-container {
+        margin-block-start: 1em;
+
+        .txt {
+            padding: 1em;
+            font-size: 1em;
+
+        }
+
+        .wait-for-next-question-txt{
+            font-size: 1.1em;
+        }
+    }
+    
+    .explanation-container {
+        padding: 1em;
+        .explanation-desc{
+            padding-block: 1em;
+        }
+        .explanation-txt {
+            margin-block: 1em;
+
+        }
+    }
+    .btn {
+        padding: 1em;
+        font-size: 1em;
+        color: #fff;
+        font-weight: 600;
+        background: linear-gradient(45deg, #308f18, #041405);
+    }
+}

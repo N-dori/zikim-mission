@@ -10,7 +10,7 @@ export interface Question {
 
   id: string,
   question: string,
-  answers: [{
+  options: [{
     id: string,
     answer: string,
     currect: boolean
@@ -42,7 +42,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מה מקור שמה של החטיבה?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: 'ראם -ראשי תיבות של ראש מלחמה.',
       currect: false
@@ -69,7 +69,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מה היה מספרה של החטיבה עם הקמתה?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: '179',
       currect: false
@@ -97,7 +97,7 @@ export const questions: Question[] = [
 
     id: makeId(),
     question: 'מה יעודה של החטיבה במקור?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: 'עתודה קרבית של פיקוד דרום .',
       currect: false
@@ -124,7 +124,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'באיזו שנה הוקמה החטיבה ?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: 'ב1967 לאחר מלחמת ששת הימים',
       currect: false
@@ -151,7 +151,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מה הייתה טבילת האש הראשונה של החטיבה?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: '"מבצע מוקד" עם פרוץ מלחמת ששת הימים.  ',
       currect: false
@@ -180,7 +180,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מי היה מפקד החטיבה הראשון?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: 'שמואל גלינקא ',
       currect: true
@@ -207,7 +207,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מתי חל יום גייסות השריון?',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: '31 באוקטובר',
       currect: true
@@ -234,7 +234,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'למה קיבלה החטיבה את כינוי חטיבת דפנה',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: 'בגלל שמרבית הלוחמי הגיעו מקיבוץ דפנה.',
       currect: false
@@ -261,7 +261,7 @@ export const questions: Question[] = [
   {
     id: makeId(),
     question: 'מה היה השם המקורי של גדוד 8130',
-    answers: [{
+    options: [{
       id: makeId(),
       answer: '377',
       currect: false
