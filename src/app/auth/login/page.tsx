@@ -55,17 +55,22 @@ function LoginInner(props: Props) {
         return
   
       }
-      const res =  await signIn('credentials', {
-        email, password , redirect:false
-                                           })
-        if(res.error){
-          setError('פרטים אינם נכוvנים')
-          return
-        }                                          
-        router.replace(callbackUrl)
+      const res = await signIn('credentials', {
+        email, password, redirect: false,
+      })
+      if (!res) {
+        setError('שגיאת רשת. נסה שוב')
+        return
+      }
+      if (res.error || !res.ok) {
+        console.log('signIn failed', res.error)
+        setError('פרטים אינם נכונים')
+        return
+      }
+      router.replace(callbackUrl)
     } catch (err) {
-      console.log('had a problom...',err);
-
+      console.log('had a problom...', err)
+      setError('שגיאה לא צפויה. נסה שוב')
     }
 
   }

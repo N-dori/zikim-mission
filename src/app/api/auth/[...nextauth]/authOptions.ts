@@ -13,23 +13,36 @@ export const authOptions: AuthOptions = {
                 name: 'Credentials',
                 credentials: {},
                 async authorize(credentials) {
+                    const { email, password } = (credentials || {}) as Credentials
+                    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL
+                    if (!apiBase) {
+                        console.error('[auth] NEXT_PUBLIC_API_BASE_URL is not set — set it in the deployment env and redeploy')
+                        return null
+                    }
+                    if (!email || !password) {
+                        console.warn('[auth] missing email or password in credentials submission')
+                        return null
+                    }
+                    const url = `${apiBase}/users/login`
                     try {
-                        const { email, password } = credentials as Credentials
-                        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL
-                        if (!apiBase) {
-                            console.error('NEXT_PUBLIC_API_BASE_URL not set')
-                            return null
-                        }
-                        const res = await fetch(`${apiBase}/users/login`, {
+                        const res = await fetch(url, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ email, password }),
                         })
-                        if (!res.ok) return null
+                        if (!res.ok) {
+                            const body = await res.text().catch(() => '')
+                            console.warn(`[auth] backend rejected login (${res.status}) email=${email} body=${body}`)
+                            return null
+                        }
                         const { user } = await res.json()
-                        return user || null
+                        if (!user) {
+                            console.warn(`[auth] backend returned 200 but no user in body email=${email}`)
+                            return null
+                        }
+                        return user
                     } catch (err) {
-                        console.log(err)
+                        console.error(`[auth] fetch failed POST ${url} email=${email}`, err)
                         return null
                     }
                 }
