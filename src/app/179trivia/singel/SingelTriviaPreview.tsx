@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Question } from '../../assets/data/triviaData'
 import Image from 'next/image'
+
+function shuffleArray<T>(arr: readonly T[]): T[] {
+  const next = [...arr]
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]]
+  }
+  return next
+}
 
 type SingelTriviaPreviewProps = {
     question: Question
@@ -11,6 +20,7 @@ export  function SingelTriviaPreview({question,incrementIndex}: SingelTriviaPrev
   const [isRigthAnswer, setIsRigthAnswer] = useState(false)
   const [currentAnswer, setCurrentAnswer] = useState('')
   const [answerColor, setAnswerColor] = useState('')
+  const shuffledOptions = useMemo(() => shuffleArray(question.options), [question.id])
 
   
   
@@ -50,7 +60,7 @@ export  function SingelTriviaPreview({question,incrementIndex}: SingelTriviaPrev
           <h2 className='question-title flex-jc-ac'><span className='tac'>{question.question}</span></h2>
          
           {!isRigthAnswer ? <div className='options-container grid'>
-              {question.options.map((ans,i) =>
+              {shuffledOptions.map((ans,i) =>
                   <button type='button' className={`btn-option btn-option${i+1} tac`}
                   key={ans.id}
                   style={{

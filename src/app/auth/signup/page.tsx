@@ -1,14 +1,22 @@
 "use client"
 import EyeSvg from '@/app/assets/svgs/EyeSvg'
 import { svgs } from '@/app/assets/svgs/svg'
-import { getUrl } from '@/app/utils/utils'
+import { apiFetch } from '@/app/libs/apiClient'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import React, { Suspense, useEffect, useState } from 'react'
 
 export default function signup() {
+  return (
+    <Suspense fallback={null}>
+      <SignupInner />
+    </Suspense>
+  )
+}
+
+function SignupInner() {
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [battalions, setBattalions] = useState<string[]>(["8130", "7029", "8104"])
@@ -18,14 +26,16 @@ export default function signup() {
   const [isVisible, setIsVisible] = useState(false)
   
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams?.get('callbackUrl') || '/menu'
 
   const session = useSession()
 
  useEffect(() => {
-  
+
 if(session){
   if(session?.data?.user?.email){
-    router.push('/menu')
+    router.push(callbackUrl)
 
   }
 }
@@ -51,25 +61,21 @@ if(session){
       return
     }
     try {
-      const url =  getUrl('userExists')
-      const userExist = await fetch(url, {
+      const userExist = await apiFetch('/users/exists', {
         method: 'POST',
-        headers: { "Content-type": "appliction/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
+        auth: false,
       })
       const { user } = await userExist.json()
       if (user) {
         setError("כתובת האימייל קיימת במערכת")
         return
       }
-      const urlRegistration =  getUrl('registration')
 
-      const res = await fetch(urlRegistration, {
-
+      const res = await apiFetch('/users/register', {
         method: 'POST',
-        headers: { "Content-type": "appliction/json" },
-        body: JSON.stringify({ name, email, battalion, password })
-
+        body: JSON.stringify({ name, email, battalion, password }),
+        auth: false,
       })
       if (res.ok) {
         //loging in mainly for session
@@ -79,7 +85,7 @@ if(session){
         const form = e.target
         form.reset()
         console.log('user has registered');
-        router.push('/menu')
+        router.push(callbackUrl)
 
       } else {
         console.log('user registration failed');
@@ -100,7 +106,7 @@ if(session){
 
       <section className='login-modal-container flex-col flex-jc-ac '>
         <h1 className='login-signup-title '>רישום זריז ומתחילים</h1>
-        <h2 className='sub-title tac'>ודאו שאתם נרשמים עם הסיסמא שקיבלתם</h2>
+        <h2 className='sub-title tac'>בחרו סיסמא משלכם</h2>
 
         <form className='form-container flex-col' onSubmit={handelSubmit}>
           <input onChange={(e) => setName(e.target.value)} className='form-input' type='text' placeholder='שם מלא' ></input>

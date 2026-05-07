@@ -1,14 +1,21 @@
 "use client"
-import React, { useEffect, useRef, useState  } from 'react'
+import React, { Suspense, useEffect, useRef, useState  } from 'react'
 import {Tuser} from '../types/types'
-import { getUrl } from '../utils/utils'
+import { apiFetch } from '../libs/apiClient'
 import { usePathname, useSearchParams  } from 'next/navigation'
 type ProgressBarProps = {
     articel: string,
     user:Tuser|null
-    
+
 }
-export function ProgressBar({user, articel }: ProgressBarProps) {
+export function ProgressBar(props: ProgressBarProps) {
+    return (
+        <Suspense fallback={null}>
+            <ProgressBarInner {...props} />
+        </Suspense>
+    )
+}
+function ProgressBarInner({user, articel }: ProgressBarProps) {
     //for displaying the most updated value
     const [scrollPescentage, setScrollPescentage] = useState(0)
     // to keep trak after the value
@@ -39,24 +46,25 @@ export function ProgressBar({user, articel }: ProgressBarProps) {
   useEffect(() => {
 //pathname,searchParams trigger this func when the path is changing
     return () => {
+        if (!user) return
 
             if(scrollPescentageRef.current>0){
-                if(articel === 'early History'){   
+                if(articel === 'early History'){
                             if(scrollPescentageRef.current > +(user.isEarlyHistoryCompleted)){
                                 console.log('about to update isEarlyHistoryCompleted Reading Progress ', +(user.isEarlyHistoryCompleted ))
                                 updateUserReadingProgress(scrollPescentageRef.current)
-                                
+
                             }
                         }else {
                             if(scrollPescentageRef.current > +(user.isOtefAzaCompleted)){
                                 console.log('about to update isOtefAzaCompleted Reading Progress ', +(user.isEarlyHistoryCompleted ))
                                 updateUserReadingProgress(scrollPescentageRef.current)
-                
+
                             }
-                        } 
+                        }
 
             }
-    
+
     };
   }, [pathname,searchParams]);
 
@@ -65,23 +73,16 @@ export function ProgressBar({user, articel }: ProgressBarProps) {
     const updateUserReadingProgress = async (scrollProcentage:number) => {
         const email = user.email
         try {
-            const url = getUrl('updateUserProgress')
-
-                const res = await fetch(url, {
-                    method: 'PUT',
-                    headers: { "Content-type": "appliction/json" },
-                    body: JSON.stringify({ email, articel, scrollProcentage })
-                })
-                if (res.ok) {
-                    console.log('update User Reading Progress works',res.json());
-                    
-                }
-            
-        }catch(err){
-            console.log('update User Reading Progress dose not works',err);
-
+            const res = await apiFetch('/users/progress', {
+                method: 'PUT',
+                body: JSON.stringify({ email, articel, scrollProcentage })
+            })
+            if (res.ok) {
+                console.log('update User Reading Progress works')
+            }
+        } catch (err) {
+            console.log('update User Reading Progress dose not work', err)
         }
-       
 }
 
     return (

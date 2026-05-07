@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import WaitingList from './WaitingList'
 import { Tanswer, Tplayer, Troom } from '@/app/types/types'
 import GroupTriviaGame from './GroupTriviaGame'
-import { getUrl, removeDuplicates } from '@/app/utils/utils'
-import { useSession } from 'next-auth/react'
-import { io } from 'socket.io-client'
+import { removeDuplicates } from '@/app/utils/utils'
+import { getSocket, joinRoom } from '@/app/libs/socket'
+import { apiFetch } from '@/app/libs/apiClient'
 
 type GroupRoomProps = {
     roomId: string
@@ -18,27 +18,19 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     const [isAllReady, setIsAllReady] = useState<boolean>(false)
     const [players, setPlayers] = useState<Tplayer[]>([])
     const [playersScores, setPlayersScores] = useState<Tanswer[]>([])
-    const session = useSession()
     const scoresRef=useRef<Tanswer[]>([])
  
     useEffect(() => {
-        const socket = io(getUrl(''))
-        if (typeof window !== 'undefined') {
-            // for confeti cmp
-            window.addEventListener('beforeunload', function () {
-                socket.close();
-            });
-        }
-        socket.on('allHere', () => {
-            setIsAllReady(true);
-        });
-
-
-        return () => {
-            socket.off('allHere');
-            socket.disconnect();
-        };
-    }, [playersScores]);
+        let cleanup: (() => void) | undefined
+        ;(async () => {
+            const socket = await getSocket()
+            await joinRoom(roomId)
+            const handleAllHere = () => setIsAllReady(true)
+            socket.on('allHere', handleAllHere)
+            cleanup = () => socket.off('allHere', handleAllHere)
+        })()
+        return () => { cleanup?.() }
+    }, [roomId]);
 
     const addPlayerScore = (newScore: Tanswer) => {
    
@@ -82,8 +74,12 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
         }
     }
     const toggelIsVinner = (vinner:Tanswer) => {
-        const idx = scoresRef.current.findIndex(ans => (ans.questionId === vinner.questionId && ans.playerId === vinner.playerId) )
-        scoresRef.current[idx].isVinner= true
+        const idx = scoresRef.current.findIndex(ans => (
+            ans.questionId === vinner.questionId &&
+            (ans.nickName ?? ans.playerId) === (vinner.nickName ?? vinner.playerId)
+        ))
+        if (idx === -1) return
+        scoresRef.current[idx].isVinner = true
     }
 
     const getData = async (_id: string) => {
@@ -91,15 +87,10 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
             return
         }
 
-        const url = getUrl('trivia/getParticipants')
-
-        const res = await fetch(url, {
+        const res = await apiFetch('/trivia/getParticipants', {
             method: 'POST',
-            headers: {
-                "Content-type": "application/json",
-                'Cache-Control': 'no-cache',
-            },
-            body: JSON.stringify({ _id })
+            headers: { 'Cache-Control': 'no-cache' },
+            body: JSON.stringify({ id: _id })
         })
 
         if ((res).ok) {
@@ -109,7 +100,12 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
             if (players) {
                 setPlayers([...players])
             }
-            const client: Tplayer = room.participants.find((player: Tplayer) => player.name === session?.data?.user?.name)
+            const myNickName = typeof window !== 'undefined'
+                ? sessionStorage.getItem(`trivia:nickName:${roomId}`)
+                : null
+            const client: Tplayer = room.participants.find(
+                (player: Tplayer) => player.nickName === myNickName
+            )
 
             if (client) {
                 setCurrPlayer(client)
@@ -139,6 +135,7 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     const groupTriviaGameProps = {
 
 
+        roomId,
         players,
         currPlayer,
         setCurrPlayer,

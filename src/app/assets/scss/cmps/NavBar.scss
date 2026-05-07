@@ -1,20 +1,31 @@
-.nav-bar{
-    background-color: #fcfefe;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    padding: .5em;
-   
-    .logo-container{
-        gap:.5em;
+.nav-bar {
+    background-color: var(--surface);
+    border-bottom: 2px solid var(--accent-deep);
+    box-shadow: var(--shadow-md);
+    padding: 0.5em 1em;
+    color: var(--text);
+
+    .logo-container {
+        gap: 0.5em;
         text-decoration: none;
-        .logo{
+
+        .logo {
             margin-inline-start: 1em;
             cursor: pointer;
-            
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         }
-        
     }
-.login-link{
-    margin-inline-start: 1em;
-    font-size: 1.1em;
-}
+
+    .login-link {
+        margin-inline-start: 1em;
+        font-size: 1.05em;
+        color: var(--accent-strong);
+        text-decoration: none;
+
+        &:hover { color: var(--accent); }
+    }
+
+    .hero {
+        opacity: 0.95;
+    }
 }

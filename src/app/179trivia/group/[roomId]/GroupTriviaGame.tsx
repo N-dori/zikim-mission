@@ -5,12 +5,12 @@ import { TrivaPreview } from '../../../cmps/TrivaPreview'
 import { Tanswer, Tplayer } from '@/app/types/types'
 import Timer from './Timer'
 import ScoreTable from './ScoreTable'
-import { io, Socket } from 'socket.io-client'
 import FinalScreen from './FinalScreen'
-import { getUrl } from '@/app/utils/utils'
+import { getSocket, joinRoom } from '@/app/libs/socket'
 
 
 type GroupTriviaGameProps = {
+    roomId: string
     players: Tplayer[]
     currPlayer: Tplayer
     setCurrPlayer: React.Dispatch<React.SetStateAction<Tplayer>>
@@ -20,7 +20,7 @@ type GroupTriviaGameProps = {
 
 }
 
-export default function GroupTriviaGame({ results, players, currPlayer, setCurrPlayer, addPlayerScore, cheackVictory }: GroupTriviaGameProps) {
+export default function GroupTriviaGame({ roomId, results, players, currPlayer, setCurrPlayer, addPlayerScore, cheackVictory }: GroupTriviaGameProps) {
 
     const [isGameOver, setIsGameOver] = useState(false)
     const [winHeight, setwinHeight] = useState({ height: 450 })
@@ -37,39 +37,37 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
 
 
     useEffect(() => {
-        const socket = io(getUrl(''))
-
         if (typeof window !== 'undefined') {
-            window.addEventListener('beforeunload', function () {
-                socket.close();
-            });
-            // for confeti cmp
             setwinHeight({ height: window.innerHeight })
         }
-        socket.on('addPlayerScore', (newScore) => {
-            addPlayerScore(newScore);
-        });
+        let cleanup: (() => void) | undefined
+        ;(async () => {
+            const socket = await getSocket()
+            await joinRoom(roomId)
 
-        socket.on('next question', () => {
-            getNextQuestion()
+            const handleAddScore = (newScore: Tanswer) => addPlayerScore(newScore)
+            const handleNextQuestion = () => getNextQuestion()
 
-        });
+            socket.on('addPlayerScore', handleAddScore);
+            socket.on('next question', handleNextQuestion);
 
-        return () => {
-            socket.off('next question')
-            socket.off('updatePlayersScore');
-        };
+            cleanup = () => {
+                socket.off('addPlayerScore', handleAddScore)
+                socket.off('next question', handleNextQuestion)
+            }
+        })()
+        return () => { cleanup?.() }
 
-    }, [])
+    }, [roomId])
 
     const getNextQuestion = () => {
         incrementQuestionIndex()
         setIsRoundFinished(false)
 
     }
-    const handelNextQuestion = () => {
-        const socket = io(getUrl(''))
-        socket.emit('next question');
+    const handelNextQuestion = async () => {
+        const socket = await getSocket()
+        socket.emit('next question', { roomId });
     }
 
     const incrementQuestionIndex = () => {
@@ -81,7 +79,7 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
         console.log('incrementing index with : :', questIndex.current);
     }
 
-    const handelAnswerClicked = (score: number, timeLeft: number, isVinner: boolean) => {
+    const handelAnswerClicked = async (score: number, timeLeft: number, isVinner: boolean) => {
         clearInterval(timeInerval);
         const newScore = {
             score,
@@ -90,9 +88,10 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
             playerId: currPlayer._id,
             questionId: questIndex.current,
             nickName: currPlayer.nickName,
-            img: currPlayer.img
+            img: currPlayer.img,
+            roomId,
         };
-        const socket = io(getUrl(''))
+        const socket = await getSocket()
         socket.emit('addPlayerScore', newScore);
     }
 
@@ -102,7 +101,7 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
         setIsGameOver(false)
     }
 
-    const handelTimeOver = () => {
+    const handelTimeOver = async () => {
 
         let isPlayerPickedAnswer: boolean = isDisable // all buttons are disabled if it is true
         if (isPlayerPickedAnswer) {
@@ -116,9 +115,10 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
             playerId: currPlayer._id,
             questionId: questIndex.current,
             nickName: currPlayer.nickName,
-            img: currPlayer.img
+            img: currPlayer.img,
+            roomId,
         };
-        const socket = io(getUrl(''))
+        const socket = await getSocket()
         socket.emit('addPlayerScore', newScore);
         clearInterval(timeInerval)
     }
@@ -146,17 +146,20 @@ export default function GroupTriviaGame({ results, players, currPlayer, setCurrP
         initialTime
     }
     const finalScreenProps = {
+        roomId,
         results,
         winHeight,
         handelNewGame,
         players,
     }
     const scoreTableProps = {
+        roomId,
         players,
         question: questions[questIndex.current],
         handelNextQuestion,
         currPlayer,
         results,
+        isLastQuestion: questIndex.current === questions.length - 1,
     }
 
     return (

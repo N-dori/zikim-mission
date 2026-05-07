@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { getServerSession } from "next-auth/next"
 import Link from "next/link";
 
 export default async function Home() {

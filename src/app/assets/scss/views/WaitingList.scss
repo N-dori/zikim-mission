@@ -1,36 +1,48 @@
-.trivia-waiting-room-warpper{
-    // border: 4px solid transparent;
-    // border-image: linear-gradient(45deg, rgb(34, 34, 34), rgb(59, 208, 22));
-    // border-image-slice: 1;
-    grid-column: 1/-1;
-    height: 95vh;
-    background-color: #4a993a3b;
-.waiting-room-container {
-    padding: 1em;
+.trivia-waiting-room-warpper {
+    grid-column: 1 / -1;
+    min-height: 95vh;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(79, 170, 48, 0.15), transparent 60%),
+        var(--bg);
+    color: var(--text);
 
-    .players-container {
-        flex-wrap: wrap;
-        gap: 2em;
-    }
+    .waiting-room-container {
+        padding: 1.25em;
 
-    .start-game-btn-container {
-        position: relative;
-     
-
-        .start-game-btn {
-            line-height: 1em;
-            padding: 1em;
-            font-size: 1em;
-            color: #fff;
-            font-weight: 600;
-            background: linear-gradient(45deg, #308f18, #041405);
-            width: 100% ;
-            letter-spacing: 1px;
-            line-height: 28px;
-          
+        h1 {
+            color: var(--text);
+            border-bottom: 2px solid var(--accent-deep);
+            padding-bottom: 0.3em;
         }
+
+        .players-container {
+            flex-wrap: wrap;
+            gap: 1.5em;
+            justify-content: center;
+        }
+
+        .start-game-btn-container {
+            position: relative;
+
+            .start-game-btn {
+                line-height: 1.3;
+                padding: 1em 1.5em;
+                font-size: 1em;
+                color: var(--text);
+                font-weight: 700;
+                background: var(--grad-accent);
+                border: 1px solid var(--accent-strong);
+                border-radius: var(--radius);
+                width: 100%;
+                letter-spacing: 0.05em;
+                box-shadow: var(--shadow-md);
+                cursor: pointer;
+                transition: box-shadow 0.2s;
+
+                &:hover { box-shadow: var(--shadow-lg), var(--shadow-glow); }
+            }
+        }
+
+        .lodaer { color: var(--accent-strong); }
     }
-
-
-}
 }

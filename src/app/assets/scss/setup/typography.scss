@@ -1,12 +1,29 @@
 @font-face {
     font-family: Assistant-Regular;
     src: url(https://res.cloudinary.com/dii16awkb/raw/upload/v1687467407/Assistant-Regular_wcxq1z.ttf);
-  }
+    font-display: swap;
+}
 @font-face {
     font-family: Assistant-Bold;
     src: url(https://res.cloudinary.com/dii16awkb/raw/upload/v1687467468/Assistant-Bold_itkktn.ttf);
-  }
+    font-display: swap;
+}
 @font-face {
     font-family: Karantina;
-    src: url(https://res.cloudinary.com/dii16awkb/raw/upload/v1687638595/Karantina-Light_mvayf9.ttf)
+    src: url(https://res.cloudinary.com/dii16awkb/raw/upload/v1687638595/Karantina-Light_mvayf9.ttf);
+    font-display: swap;
 }
+
+// Display / stencil-ish headings for the military theme.
+h1, h2, h3, .display {
+    font-family: Karantina, 'Assistant-Bold', Impact, sans-serif;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    font-weight: 400;
+}
+
+h1 { font-size: 2.4rem; line-height: 1.1; }
+h2 { font-size: 1.8rem; line-height: 1.15; }
+h3 { font-size: 1.35rem; line-height: 1.2; }
+
+strong, b { font-family: 'Assistant-Bold', sans-serif; font-weight: 600; }

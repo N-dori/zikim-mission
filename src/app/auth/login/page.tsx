@@ -1,19 +1,29 @@
 "use client"
 import EyeSvg from '@/app/assets/svgs/EyeSvg'
-import { getUrl } from '@/app/utils/utils'
+import { apiFetch } from '@/app/libs/apiClient'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import React, { Suspense, useState } from 'react'
 useSession
 type Props = {}
 
 export default function login(props: Props) {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner {...props} />
+    </Suspense>
+  )
+}
+
+function LoginInner(props: Props) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams?.get('callbackUrl') || '/menu'
   const [isVisible, setIsVisible] = useState(false)
 
   const handelIsPasswordVisible = () => {
@@ -34,13 +44,12 @@ export default function login(props: Props) {
       return
     }
     try {
-      const url = getUrl('userExists')
-      const userExist = await fetch(url, {
+      const userExist = await apiFetch('/users/exists', {
         method: 'POST',
-        headers: { "Content-type": "appliction/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
+        auth: false,
       })
-      const { user } = await userExist.json()     
+      const { user } = await userExist.json()
       if (!user) {
         setError("כתובת המייל לא קיימת יש צורך להירשם")
         return
@@ -53,7 +62,7 @@ export default function login(props: Props) {
           setError('פרטים אינם נכוvנים')
           return
         }                                          
-        router.replace('/menu')
+        router.replace(callbackUrl)
     } catch (err) {
       console.log('had a problom...',err);
 
@@ -73,9 +82,11 @@ export default function login(props: Props) {
           <input onChange={(e) => setPassword(e.target.value)} className='password-input' type={isVisible?'text':'password'} placeholder='סיסמא' ></input>
           </div> 
           {error? <span className='msg err-msg'>{error}</span>:<></>}
-          <Link className='msg' href={'/auth/signup'}>לא רשום עדיין? לחץ כאן</Link>
           <button type='submit' className='signin-btn'>התחבר</button>
         </form>
+        <p className='signup-link tac'>
+          אין לך חשבון? <Link href={`/auth/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}>הירשם כאן</Link>
+        </p>
 
       </section>
     </main>

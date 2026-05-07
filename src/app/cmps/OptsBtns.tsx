@@ -1,25 +1,16 @@
 'use client'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 type Props = {}
 
 export default function OptsBtns({ }: Props) {
-  const session = useSession()
-  const router = useRouter()
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    // console.log(session.data);
-  if(!session.data){
-router.push('/auth/signup')
+  }, [])
 
-  }
-  }, [session.data])
 
-  
 
 
   return (

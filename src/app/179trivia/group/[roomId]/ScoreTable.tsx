@@ -8,14 +8,16 @@ import ScoreTableList from './ScoreTableList'
 import { CheckSvg } from '@/app/assets/svgs/CheckSvg'
 
 type ScoreTableProps = {
+  roomId: string
   players?: Tplayer[]
   question?: Question
   handelNextQuestion?: () => void
   currPlayer?:Tplayer
   results:Tanswer[]
+  isLastQuestion: boolean
 }
 
-export default function ScoreTable({results,currPlayer,handelNextQuestion, players, question }: ScoreTableProps) {
+export default function ScoreTable({roomId, results,currPlayer,handelNextQuestion, players, question, isLastQuestion }: ScoreTableProps) {
  
   const [isExplantionShown, setIsExplantionShown] = useState<boolean>(false)
   const currectAnswer = question.options.find(opt=> opt.currect)
@@ -43,7 +45,7 @@ export default function ScoreTable({results,currPlayer,handelNextQuestion, playe
       </div>} 
 
       {!isExplantionShown ?
-      <ScoreTableList players={players} results={results} />
+      <ScoreTableList roomId={roomId} players={players} results={results} />
       :
          <Explantion {...explantionProps}/>
       }
@@ -55,10 +57,10 @@ export default function ScoreTable({results,currPlayer,handelNextQuestion, playe
           currPlayer.isAdmin?
           <button type='button' className='btn pointer'
           onClick={handelNextQuestion}
-          >אתה מנהל החדר לחץ כאן למעבר לשאלה הבאה</button>
+          >{isLastQuestion ? 'הצג תוצאות סופיות' : 'אתה מנהל החדר לחץ כאן למעבר לשאלה הבאה'}</button>
           :
           <div className='start-game-btn flex-col flex-jc-ac'>
-          <span className='wait-for-next-question-txt'>המתן לשאלה הבאה </span>
+          <span className='wait-for-next-question-txt'>{isLastQuestion ? 'המתן לתוצאות הסופיות' : 'המתן לשאלה הבאה'} </span>
       <BeatLoader
           className='lodaer'
           color={`#308f18`}

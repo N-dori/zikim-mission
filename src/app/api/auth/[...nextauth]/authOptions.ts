@@ -1,9 +1,8 @@
 
-import connectMongoDB from "@/app/libs/mongoDB";
-import User from "@/app/models/user";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcryptjs' 
-import  { AuthOptions } from "next-auth";
+import supabase from '@/app/libs/supabaseClient'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import bcrypt from 'bcryptjs'
+import { AuthOptions } from 'next-auth'
 
 type Credentials = {
     email:string,
@@ -18,22 +17,17 @@ export const authOptions:AuthOptions = {
                 credentials: {},
                 async authorize(credentials) {
                     try {
-                    const { email, password } = credentials as Credentials
-
-                        await connectMongoDB()
-                        const user = await User.findOne({ email })
-                        if (!user) {
-                            return null
-                        }
-                       
-                        const passwordMatch =  await bcrypt.compare(password ,user.password)
-                        if(!passwordMatch){
-                         return null 
-                        }
-
+                        const { email, password } = credentials as Credentials
+                        const { data, error } = await supabase.from('users').select('*').eq('email', email).limit(1)
+                        if (error) throw error
+                        const user = data && data.length ? data[0] : null
+                        if (!user) return null
+                        const passwordMatch = await bcrypt.compare(password, user.password)
+                        if (!passwordMatch) return null
                         return user
                     } catch (err) {
-                        console.log(err);
+                        console.log(err)
+                        return null
                     }
                 }
             }
@@ -44,8 +38,8 @@ export const authOptions:AuthOptions = {
         strategy: 'jwt',
         maxAge: 60 * 60 * 24 * 30 * 3 // 60 seconds * 60 minutes * 24 hours * 30 days * 3 month
     },
-    secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: '/auth/signup'
+        signIn: '/auth/login'
     }
 }

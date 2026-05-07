@@ -1,17 +1,39 @@
+.filter-from-container {
+    gap: 8px;
+    background: var(--grad-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 1.5em;
+    color: var(--text);
 
-.filter-from-container{
-    gap:6px;
-    background-color: lightblue;
-    padding: 2em;
-     .form-input{
-        padding: 6px;
+    .form-input {
+        padding: 8px 10px;
+        background-color: rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        color: var(--text);
+
+        &::placeholder { color: var(--text-muted); }
+        &:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
+        }
     }
 }
-.users-list-container{
+
+.users-list-container {
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    gap:10px;
-    .total-students{
-        grid-column: 1/-1;
+    gap: 10px;
+    color: var(--text);
+
+    .total-students {
+        grid-column: 1 / -1;
+        color: var(--khaki);
+        font-family: Karantina, 'Assistant-Bold', sans-serif;
+        letter-spacing: 0.04em;
+        padding-block: 0.5em;
+        border-bottom: 1px solid var(--border);
     }
 
     .user-email {
@@ -20,12 +42,13 @@
         text-overflow: ellipsis;
         max-width: 100px;
         cursor: pointer;
-      }
+        color: var(--text-muted);
+    }
+
     .user-email:hover {
         overflow: inherit;
         text-overflow: none;
-        max-width: none; 
-      }
-
-   
+        max-width: none;
+        color: var(--accent-strong);
+    }
 }

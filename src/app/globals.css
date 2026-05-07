@@ -1,3 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
 body{
     background-color: aliceblue;
+    font-family: 'Merriweather', Georgia, serif;
+    color: #222;
+    line-height: 1.7;
+    direction: rtl;
 }
+
+.main-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    font-size: 18px;
+}
+
+.intro {
+    font-size: 1.1rem;
+    margin: 1rem 0;
+    color: #333;
+}
+
+.toc {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    padding: 0.6rem;
+    border-radius: 6px;
+    max-width: 260px;
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.toc h3 {
+    margin: 0 0 0.4rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.toc ul { list-style: none; padding: 0; margin: 0; }
+
+.toc li { margin: 0.25rem 0; }
+
+.toc a { color: #0645AD; text-decoration: none; font-size: 0.95rem; }
+
+.toc a:hover { text-decoration: underline; }
+
+h2 {
+    font-family: 'Merriweather', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0.6rem;
+}
+
+p.poem { font-style: italic; margin: 0.6rem 0; }

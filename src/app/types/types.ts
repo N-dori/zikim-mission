@@ -20,6 +20,9 @@ export type Tanswer = {
         isVinner:boolean,
         playerId?:string,
         questionId?:string,
+        nickName?:string,
+        img?:string,
+        roomId?:string,
 }
 
 export type Tplayer = {
@@ -36,8 +39,8 @@ export type Tplayer = {
 
 
 export type Troom = {
-        _id?: string,
+        id?: string,
         name: string,
         participants: Tplayer[]
 
-} 
+}

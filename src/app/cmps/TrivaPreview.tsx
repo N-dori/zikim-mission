@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Question } from '../assets/data/triviaData'
 import Image from 'next/image'
 import { Tplayer } from '../types/types'
+
+function shuffleArray<T>(arr: readonly T[]): T[] {
+  const next = [...arr]
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]]
+  }
+  return next
+}
 
 type TrivaPreviewProps = {
   players:Tplayer[]
@@ -21,6 +30,7 @@ export function TrivaPreview({ players,initialTime, timeInerval, question, timeL
 
   const [currentOpt, setCurrentOpt] = useState('')
   const [optColor, setOptColor] = useState('')
+  const shuffledOptions = useMemo(() => shuffleArray(question.options), [question.id])
   // useEffect(() => {
 
   // }, [question.question])
@@ -62,7 +72,7 @@ export function TrivaPreview({ players,initialTime, timeInerval, question, timeL
       <h2 className='question-title flex-jc-ac'><span className='tac'>{question.question}</span></h2>
 
       <div className='options-container grid'>
-        {question.options.map((opt, i) =>
+        {shuffledOptions.map((opt, i) =>
           <button type='button' className={`btn-option btn-option${i + 1} tac`}
             disabled={isDisable}
             key={opt.id}

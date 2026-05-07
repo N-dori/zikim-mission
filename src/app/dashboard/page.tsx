@@ -1,16 +1,16 @@
 
 import React from 'react'
 
-import ServerUserIndex from './ServerUserIndex';
+import ClientUsersIndex from './ClientUsersIndex';
 
 
-export default  function dashboard() {
-  
+export default function dashboard() {
+
   return (
     <main className='gc2'>
     <h1 className='title'>רשימת מתשמשים </h1>
-      <ServerUserIndex/>
-    
+      <ClientUsersIndex/>
+
   </main>
   )
 }
