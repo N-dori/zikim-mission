@@ -78,15 +78,16 @@ if(session){
         auth: false,
       })
       if (res.ok) {
-        //loging in mainly for session
-        const res =  await signIn('credentials', {
-          email, password , redirect:false
-                                             })
-        const form = e.target
-        form.reset()
-        console.log('user has registered');
+        const signInRes = await signIn('credentials', {
+          email, password, redirect: false,
+        })
+        if (!signInRes?.ok) {
+          console.log('signIn after register failed', signInRes?.error)
+          setError('הרישום הצליח אך ההתחברות נכשלה. נסה להתחבר מהמסך הבא.')
+          return
+        }
+        e.target.reset()
         router.push(callbackUrl)
-
       } else {
         console.log('user registration failed');
         setError("  פרטים אינם נכונים נסה שוב יש להירשם עם הסיסמא הנכונה")
