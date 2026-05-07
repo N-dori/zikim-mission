@@ -24,25 +24,31 @@ export default function Orientation({ }: Props) {
   const [, setMap] = useState(null)
   const [zoom] = useState(11)
   const [isMarkerActive, setIsMarkerActive] = useState<null | string>(null)
-  const [wikiPrase, setWikiPrase] = useState<null | string>(null)
-
-
-
+  const [wikiHtml, setWikiHtml] = useState<null | string>(null)
+  const [wikiStatus, setWikiStatus] = useState<'idle' | 'loading' | 'ready' | 'empty'>('idle')
 
   const getWikiPrase = async (txt: string) => {
-    setWikiPrase(null)
+    setWikiHtml(null)
+    setWikiStatus('loading')
     try {
       const res = await apiFetch('/wiki', {
         method: 'POST',
         auth: false,
         body: JSON.stringify({ txt }),
       })
-      if (!res.ok) return
+      if (!res.ok) { setWikiStatus('empty'); return }
       const { data } = await res.json()
       const key = Object.keys(data.query.pages).join()
-      setWikiPrase(data.query.pages[key]?.extract ?? null)
+      const extract = data.query.pages[key]?.extract
+      if (extract) {
+        setWikiHtml(extract)
+        setWikiStatus('ready')
+      } else {
+        setWikiStatus('empty')
+      }
     } catch (err) {
       console.error('wiki fetch failed', err)
+      setWikiStatus('empty')
     }
   }
   
@@ -103,11 +109,19 @@ export default function Orientation({ }: Props) {
                 {
                   isMarkerActive === loc.id ?
                   <InfoWindowF position={loc} onCloseClick={() => setIsMarkerActive(null)}>
-                      {wikiPrase ? <>
-                        <div dangerouslySetInnerHTML={{ __html: wikiPrase }} />
-                        <Link href={`https://he.wikipedia.org/wiki/${loc.name}`}>לקריאה נוספת ...</Link>
-                      </> : <div>טוען...</div>}
-                    </InfoWindowF> : <></>
+                    <div className='wiki-info'>
+                      <h3 className='wiki-info-title'>{loc.name}</h3>
+                      {wikiStatus === 'loading' && <p className='wiki-info-status'>טוען מידע...</p>}
+                      {wikiStatus === 'ready' && wikiHtml &&
+                        <div className='wiki-info-body' dangerouslySetInnerHTML={{ __html: wikiHtml }} />}
+                      {wikiStatus === 'empty' && <p className='wiki-info-status'>אין סיכום זמין</p>}
+                      <Link className='wiki-info-link'
+                        href={`https://he.wikipedia.org/wiki/${loc.name}`}
+                        target='_blank' rel='noopener noreferrer'>
+                        לקריאה נוספת בויקיפדיה ←
+                      </Link>
+                    </div>
+                  </InfoWindowF> : <></>
                 }
 
               </MarkerF>

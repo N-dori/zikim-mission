@@ -30,3 +30,73 @@
         .region4{ background-color : purple}
     }
 }
+
+// Tighten the Google Maps InfoWindow chrome around our content
+.gm-style-iw-c {
+    padding: 14px !important;
+    border-radius: 10px !important;
+    background: #fdf9ec !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+}
+.gm-style-iw-d {
+    overflow: visible !important;
+    padding: 0 !important;
+}
+.gm-style-iw-tc::after {
+    background: #fdf9ec !important;
+}
+
+.wiki-info {
+    direction: rtl;
+    text-align: right;
+    max-width: 280px;
+    color: #1d211c;
+    font-family: inherit;
+
+    .wiki-info-title {
+        margin: 0 0 8px;
+        padding-bottom: 6px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #1f4d12;
+        border-bottom: 1px solid rgba(31, 77, 18, 0.2);
+    }
+
+    .wiki-info-status {
+        margin: 0 0 8px;
+        font-size: 0.9rem;
+        color: #555;
+        font-style: italic;
+    }
+
+    .wiki-info-body {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: #1d211c;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 8px;
+
+        p {
+            margin: 0 0 8px;
+            &:last-child { margin-bottom: 0; }
+        }
+        a { color: #1f4d12; }
+    }
+
+    .wiki-info-link {
+        display: inline-block;
+        margin-top: 4px;
+        padding: 4px 0;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #1f4d12;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+
+        &:hover {
+            color: #4faa30;
+            border-bottom-color: currentColor;
+        }
+    }
+}
