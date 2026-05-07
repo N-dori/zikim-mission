@@ -106,6 +106,9 @@
 
             .form-select-input {
                 color: var(--text-muted);
+                option{
+                    color: var(--text);
+                }
             }
 
             .msg {
