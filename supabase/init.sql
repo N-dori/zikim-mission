@@ -30,7 +30,7 @@ create table if not exists rooms (
 
 -- Defense-in-depth: API routes use the service role key which BYPASSES RLS.
 -- These policies only matter if the anon/authenticated key is ever used to
--- talk to the DB directly (e.g. via supabaseBrowser). Deny-by-default.
+-- talk to the DB directly with the anon/publishable key. Deny-by-default.
 alter table users enable row level security;
 alter table rooms enable row level security;
 -- No policies = anon/authenticated have zero access. Service role unaffected.

@@ -31,16 +31,19 @@ export default function Orientation({ }: Props) {
 
   const getWikiPrase = async (txt: string) => {
     setWikiPrase(null)
-    const res = await apiFetch('/wiki', {
-      method: 'POST',
-      auth: false,
-      body: JSON.stringify({ txt }),
-    })
-    const { data } = await res.json()
-    const { query } = data
-    const key = Object.keys(query.pages).join()
-    const text = query.pages[key]
-    setWikiPrase(text.extract)
+    try {
+      const res = await apiFetch('/wiki', {
+        method: 'POST',
+        auth: false,
+        body: JSON.stringify({ txt }),
+      })
+      if (!res.ok) return
+      const { data } = await res.json()
+      const key = Object.keys(data.query.pages).join()
+      setWikiPrase(data.query.pages[key]?.extract ?? null)
+    } catch (err) {
+      console.error('wiki fetch failed', err)
+    }
   }
   
   const { isLoaded } = useJsApiLoader(

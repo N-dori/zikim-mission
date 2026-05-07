@@ -17,8 +17,6 @@ Add these to `.env.local` (and to Vercel project env). `.env.local` is gitignore
 |---|---|---|
 | `SUPABASE_URL` | `src/app/libs/supabaseClient.ts` | Service-role URL. Server only. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `src/app/libs/supabaseClient.ts` | **Secret.** Never expose to the browser. |
-| `NEXT_PUBLIC_SUPABASE_URL` | `src/app/libs/supabaseServer.ts`, `supabaseBrowser.ts` | Same URL as `SUPABASE_URL`; safe in browser. |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `src/app/libs/supabaseServer.ts`, `supabaseBrowser.ts` | Anon/publishable key. Safe in browser. |
 | `NEXTAUTH_SECRET` | `src/app/api/auth/[...nextauth]/authOptions.ts` | **Must NOT have `NEXT_PUBLIC_` prefix** — anyone can forge JWTs if it leaks. Rotate any value that was ever bundled with that prefix. |
 | `NEXTAUTH_URL` | NextAuth runtime | Base URL of the app, e.g. `http://localhost:3000`. |
 
