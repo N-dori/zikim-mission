@@ -89,6 +89,7 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
 
         const res = await apiFetch('/trivia/getParticipants', {
             method: 'POST',
+            auth: false,
             headers: { 'Cache-Control': 'no-cache' },
             body: JSON.stringify({ id: _id })
         })

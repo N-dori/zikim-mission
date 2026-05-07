@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation'
 import { Troom } from '@/app/types/types'
 import { getSocket } from '@/app/libs/socket'
 import { apiFetch } from '@/app/libs/apiClient'
-type Props = {}
 
-export default function CreatePlayer({ }: Props) {
+export default function CreatePlayer() {
 
     const [isStepOneFinished, setIsStepOneFinished] = useState(false)
     const [groupName, setGroupName] = useState("")
@@ -29,6 +28,7 @@ export default function CreatePlayer({ }: Props) {
         try {
             const resRoom = await apiFetch('/trivia/getRoom', {
                 method: 'POST',
+                auth: false,
                 body: JSON.stringify({ name: groupName })
             })
 
@@ -57,7 +57,7 @@ export default function CreatePlayer({ }: Props) {
             }
 
         } catch (error) {
-            console.error(error.message);
+            console.error(error instanceof Error ? error.message : error);
         }
     }
 

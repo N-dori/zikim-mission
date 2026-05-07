@@ -1,10 +1,11 @@
 "use client"
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF , Polygon  } from '@react-google-maps/api';
 import Link from 'next/link';
 import { locations } from '../assets/data/locations';
 import { gazaPolygonOptions , gazaPolygon, shaarHaNegevPolygon, shaarHaNegevPolygonOptions, HofAshkelonPolygon, hofAshkelonPolygonOptions, eshkolPolygon, eshkolPolygonOptions, merhavimPolygon, merhavimPolygonOptions} from '../assets/data/polygons';
 import { BackSvg } from '../assets/svgs/BackSvg';
+import { apiFetch } from '../libs/apiClient';
 
 type Props = {}
 
@@ -20,8 +21,8 @@ const center = {
 
 
 export default function Orientation({ }: Props) {
-  const [map, setMap] = useState(null)
-  const [zoom, setZoom] = useState(11)
+  const [, setMap] = useState(null)
+  const [zoom] = useState(11)
   const [isMarkerActive, setIsMarkerActive] = useState<null | string>(null)
   const [wikiPrase, setWikiPrase] = useState<null | string>(null)
 
@@ -29,20 +30,16 @@ export default function Orientation({ }: Props) {
 
 
   const getWikiPrase = async (txt: string) => {
-    const url = `api/wiki`
-
-    const res = await fetch(url, {
+    setWikiPrase(null)
+    const res = await apiFetch('/wiki', {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
+      auth: false,
       body: JSON.stringify({ txt }),
     })
     const { data } = await res.json()
     const { query } = data
     const key = Object.keys(query.pages).join()
     const text = query.pages[key]
-    // console.log('data', text.extract);
     setWikiPrase(text.extract)
   }
   
@@ -53,13 +50,10 @@ export default function Orientation({ }: Props) {
   })
 
   const onLoad = useCallback(function callback(map: any) {
- 
-    const bounds = new window.google.maps.LatLngBounds(center);
-    // map.fitBounds(bounds);
     map.setZoom(zoom)
     setMap(map)
   }, [])
-  const onUnmount = useCallback(function callback(map: any) {
+  const onUnmount = useCallback(function callback(_map: any) {
     setMap(null)
   }, [])
   const handelMapClick = (ev:any) =>{
