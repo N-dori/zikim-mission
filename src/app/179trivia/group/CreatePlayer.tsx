@@ -42,6 +42,7 @@ export default function CreatePlayer() {
 
             const res = await apiFetch('/trivia/createRoom', {
                 method: 'POST',
+                auth: false,
                 body: JSON.stringify({ name: groupName })
             })
             if (res.status === 401) {
