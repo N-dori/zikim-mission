@@ -28,7 +28,6 @@ export default function CreatePlayer() {
         try {
             const resRoom = await apiFetch('/trivia/getRoom', {
                 method: 'POST',
-                auth: false,
                 body: JSON.stringify({ name: groupName })
             })
 
@@ -42,7 +41,6 @@ export default function CreatePlayer() {
 
             const res = await apiFetch('/trivia/createRoom', {
                 method: 'POST',
-                
                 body: JSON.stringify({ name: groupName })
             })
             if (res.status === 401) {
