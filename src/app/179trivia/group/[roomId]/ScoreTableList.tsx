@@ -124,7 +124,7 @@ export default function ScoreTableList({ roomId, players, results }: ScoreTableL
         scoreTable.map((player, i) => {
           const isRecord = bestTime !== null && player.totalScore > 0 && player.totalTime === bestTime
           return (
-            <article key={player.playerId || i} className='player-container flex'>
+            <article key={player.playerId || i} className='player-container flex gap1'>
               <span className='flex place'>{i + 1}.</span>
               <Image width={40} height={40} src={player.img} alt={`image of ${player.nickName}`} />
               <span className='player-name flex-jc-ac'>{player.nickName}</span>
