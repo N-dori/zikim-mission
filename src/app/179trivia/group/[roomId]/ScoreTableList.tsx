@@ -127,7 +127,7 @@ export default function ScoreTableList({ roomId, players, results }: ScoreTableL
             <article key={player.playerId || i} className='player-container flex'>
               <span className='flex place'>{i + 1}.</span>
               <Image width={40} height={40} src={player.img} alt={`image of ${player.nickName}`} />
-              <span className='player-name flex-jc-ac'>{player.nickName}+ " "</span>
+              <span className='player-name flex-jc-ac'>{player.nickName}</span>
               <span className='player-score flex-jc-ac'>{player.totalScore} נק׳</span>
               <span className={`player-time flex-jc-ac${isRecord ? ' player-time-record' : ''}`}>
                 {isRecord && '⚡ '}{player.totalTime.toFixed(1)}s
