@@ -15,11 +15,13 @@ export type Tfilter = {
 }
 
 export type Tanswer = {
+        id?: string,
+        answerId: string,
         score: number,
         time: number,
         isVinner:boolean,
         playerId?:string,
-        questionId?:string,
+        questionId?: number,
         nickName?:string,
         img?:string,
         roomId?:string,

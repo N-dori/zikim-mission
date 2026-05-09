@@ -3,11 +3,13 @@ import { removeDuplicates } from '@/app/utils/utils'
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { getSocket, joinRoom } from '@/app/libs/socket'
+import { Question } from '@/app/assets/data/triviaData'
 
 type ScoreTableListProps = {
   roomId: string
   players: Tplayer[]
   results: Tanswer[]
+  question?: Question
 }
 type TscoreSummery = {
   playerId: string
@@ -19,25 +21,54 @@ type TscoreSummery = {
 
 }
 
-export default function ScoreTableList({ roomId, players, results }: ScoreTableListProps) {
+export default function ScoreTableList({ roomId, players, results, question}: ScoreTableListProps) {
   const [scoreTable, setScoreTable] = useState<TscoreSummery[]>([])
   const uniqueResultsRef = useRef([])
   const scoresSummeryRef = useRef<TscoreSummery[]>([])
 
-  useEffect(() => {
-    let cleanup: (() => void) | undefined
-    ;(async () => {
-      const socket = await getSocket()
-      await joinRoom(roomId)
-      const handleFinalResultes = (payload: { summery: TscoreSummery[] } | TscoreSummery[]) => {
-        const summery = Array.isArray(payload) ? payload : payload?.summery
-        if (summery) getScoreTable(summery)
-      }
-      socket.on('setFinalResultes', handleFinalResultes);
-      cleanup = () => socket.off('setFinalResultes', handleFinalResultes)
-    })()
-    return () => { cleanup?.() }
-  }, [roomId])
+useEffect(() => {
+
+    const summaries: TscoreSummery[] = players.map(player => {
+
+        const playerAnswers = results.filter(
+            ans => ans.playerId === player._id
+        )
+
+        const totalScore =
+            playerAnswers.reduce((acc, ans) => acc + ans.score, 0)
+
+        const totalTime =
+            playerAnswers.reduce((acc, ans) => acc + ans.time, 0)
+
+        const victories =
+            playerAnswers.filter(ans => ans.isVinner).length
+
+        return {
+            playerId: player._id!,
+            nickName: player.nickName,
+            img: player.img,
+            totalScore,
+            totalTime,
+            victories
+        }
+    })
+
+    summaries.sort((a, b) => {
+
+        if (b.totalScore !== a.totalScore) {
+            return b.totalScore - a.totalScore
+        }
+
+        if (a.totalTime !== b.totalTime) {
+            return a.totalTime - b.totalTime
+        }
+
+        return b.victories - a.victories
+    })
+
+    setScoreTable(summaries)
+
+}, [results, players])
 
   useEffect(() => {
     deleteDuplicates()
@@ -46,7 +77,7 @@ export default function ScoreTableList({ roomId, players, results }: ScoreTableL
       
 
 
-  }, [])
+  }, [results, players])
  
 
   const deleteDuplicates = () => {
@@ -57,6 +88,7 @@ export default function ScoreTableList({ roomId, players, results }: ScoreTableL
   }
   
   const getScoreSummery = async () => {
+ 
     let newScoreSummery: TscoreSummery[] = []
 
     players.forEach(player => {
@@ -88,7 +120,7 @@ export default function ScoreTableList({ roomId, players, results }: ScoreTableL
       totalScore,
       victories,
       totalTime,
-      playerId: player.nickName,
+      playerId: player.nickName+ question?.id,
       nickName: player.nickName,
       img: player.img,
     }

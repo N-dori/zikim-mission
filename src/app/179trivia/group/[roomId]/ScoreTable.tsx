@@ -45,7 +45,7 @@ export default function ScoreTable({roomId, results,currPlayer,handelNextQuestio
       </div>} 
 
       {!isExplantionShown ?
-      <ScoreTableList roomId={roomId} players={players} results={results} />
+      <ScoreTableList roomId={roomId} players={players} results={results} question={question}/>
       :
          <Explantion {...explantionProps}/>
       }

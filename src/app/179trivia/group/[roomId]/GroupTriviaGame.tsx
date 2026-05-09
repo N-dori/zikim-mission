@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useEffect, useRef, useState } from 'react'
 import { questions } from '../../../assets/data/triviaData'
 import { TrivaPreview } from '../../../cmps/TrivaPreview'
@@ -6,8 +7,7 @@ import { Tanswer, Tplayer } from '@/app/types/types'
 import Timer from './Timer'
 import ScoreTable from './ScoreTable'
 import FinalScreen from './FinalScreen'
-import { getSocket, joinRoom } from '@/app/libs/socket'
-
+import { getSocket } from '@/app/libs/socket'
 
 type GroupTriviaGameProps = {
     roomId: string
@@ -17,105 +17,151 @@ type GroupTriviaGameProps = {
     addPlayerScore: (answer: Tanswer) => void
     cheackVictory: () => void
     results: Tanswer[]
-
 }
 
-export default function GroupTriviaGame({ roomId, results, players, currPlayer, setCurrPlayer, addPlayerScore, cheackVictory }: GroupTriviaGameProps) {
+export default function GroupTriviaGame({
+    roomId,
+    results,
+    players,
+    currPlayer,
+    addPlayerScore,
+    cheackVictory
+}: GroupTriviaGameProps) {
 
     const [isGameOver, setIsGameOver] = useState(false)
+
     const [winHeight, setwinHeight] = useState({ height: 450 })
 
-    // for timer and for knowing how much time it took to answer
-    const [initialTime] = useState<number>(30); // Time left in seconds
-    const [timeLeft, setTimeLeft] = useState<number>(initialTime); // Time left in seconds
-    const [timeInerval] = useState<any>() // Time left in seconds
+    const initialTime = 30
 
-    const [isRoundFinished, setIsRoundFinished] = useState<boolean>(false); // gets updated after time of each round is over
-    const [isDisable, setIsDisable] = useState(false)//for one knowing if player already pick an an answer and two for not leting to pick another answer
+    const [timeLeft, setTimeLeft] = useState<number>(initialTime)
+
+    const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+    const [isRoundFinished, setIsRoundFinished] = useState<boolean>(false)
+
+    const [isDisable, setIsDisable] = useState(false)
+
     const questIndex = useRef(0)
-    // Synchronous guard — prevents the timer-expiry path from emitting a 0-score
-    // when the player already clicked an answer (isDisable flips async via state).
+
     const answeredQuestionRef = useRef<number | null>(null)
 
-
+    const nextQuestionLockRef = useRef(false)
 
     useEffect(() => {
+
         if (typeof window !== 'undefined') {
             setwinHeight({ height: window.innerHeight })
         }
+
         let cleanup: (() => void) | undefined
+
         ;(async () => {
+
             const socket = await getSocket()
-            await joinRoom(roomId)
 
-            const handleAddScore = (newScore: Tanswer) => addPlayerScore(newScore)
-            const handleNextQuestion = () => getNextQuestion()
+            const handleAddScore = (newScore: Tanswer) => {
+                addPlayerScore(newScore)
+            }
 
-            socket.on('addPlayerScore', handleAddScore);
-            socket.on('next question', handleNextQuestion);
+            const handleNextQuestion = () => {
+
+                if (nextQuestionLockRef.current) return
+
+                nextQuestionLockRef.current = true
+
+                incrementQuestionIndex()
+
+                setIsRoundFinished(false)
+
+                setIsDisable(false)
+
+                setTimeLeft(initialTime)
+
+                answeredQuestionRef.current = null
+
+                clearInterval(timerRef.current!)
+
+                setTimeout(() => {
+                    nextQuestionLockRef.current = false
+                }, 300)
+            }
+
+            socket.off('addPlayerScore', handleAddScore)
+            socket.off('next question', handleNextQuestion)
+
+            socket.on('addPlayerScore', handleAddScore)
+            socket.on('next question', handleNextQuestion)
 
             cleanup = () => {
                 socket.off('addPlayerScore', handleAddScore)
                 socket.off('next question', handleNextQuestion)
             }
+
         })()
-        return () => { cleanup?.() }
+
+        return () => cleanup?.()
 
     }, [roomId])
 
-    const getNextQuestion = () => {
-        incrementQuestionIndex()
-        setIsRoundFinished(false)
-        answeredQuestionRef.current = null
-    }
-    const handelNextQuestion = async () => {
-        const socket = await getSocket()
-        socket.emit('next question', { roomId });
-    }
-
     const incrementQuestionIndex = () => {
+
         if (questIndex.current === questions.length - 1) {
             setIsGameOver(true)
             return
         }
+
         questIndex.current += 1
-        console.log('incrementing index with : :', questIndex.current);
+
+        console.log('incrementing index:', questIndex.current)
     }
 
-    const handelAnswerClicked = async (score: number, timeLeft: number, isVinner: boolean) => {
+    const handelNextQuestion = async () => {
+
+        const socket = await getSocket()
+
+        socket.emit('next question', { roomId })
+    }
+
+    const handelAnswerClicked = async (
+        score: number,
+        timeLeft: number,
+        isVinner: boolean
+    ) => {
+
         if (answeredQuestionRef.current === questIndex.current) return
+
         answeredQuestionRef.current = questIndex.current
-        clearInterval(timeInerval);
-        const newScore = {
+
+        clearInterval(timerRef.current!)
+
+        const newScore: Tanswer = {
+            answerId: `${currPlayer._id}-${questIndex.current}`,
             score,
-            time: initialTime - (+timeLeft.toFixed(1)), // calculate time in seconds
+            time: initialTime - (+timeLeft.toFixed(1)),
             isVinner,
             playerId: currPlayer._id,
             questionId: questIndex.current,
             nickName: currPlayer.nickName,
             img: currPlayer.img,
             roomId,
-        };
+        }
+
         const socket = await getSocket()
-        socket.emit('addPlayerScore', newScore);
-    }
 
-
-    const handelNewGame = () => {
-        questIndex.current = 0
-        setIsGameOver(false)
+        socket.emit('addPlayerScore', newScore)
     }
 
     const handelTimeOver = async () => {
 
         if (answeredQuestionRef.current === questIndex.current) return
-        let isPlayerPickedAnswer: boolean = isDisable // all buttons are disabled if it is true
-        if (isPlayerPickedAnswer) {
-            console.log('isPlayerPickedAnswer', isPlayerPickedAnswer);
-            return
-        }
+
+        if (isDisable) return
+
         answeredQuestionRef.current = questIndex.current
-        const newScore = {
+
+        const newScore: Tanswer = {
+            answerId: `${currPlayer._id}-${questIndex.current}`,
             score: 0,
             time: initialTime,
             isVinner: false,
@@ -124,11 +170,32 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
             nickName: currPlayer.nickName,
             img: currPlayer.img,
             roomId,
-        };
+        }
+
         const socket = await getSocket()
-        socket.emit('addPlayerScore', newScore);
-        clearInterval(timeInerval)
+
+        socket.emit('addPlayerScore', newScore)
+
+        clearInterval(timerRef.current!)
     }
+
+    const handelNewGame = () => {
+
+        questIndex.current = 0
+
+        answeredQuestionRef.current = null
+
+        nextQuestionLockRef.current = false
+
+        setTimeLeft(initialTime)
+
+        setIsDisable(false)
+
+        setIsRoundFinished(false)
+
+        setIsGameOver(false)
+    }
+
     const triviaPreviewProps = {
         players,
         timeLeft,
@@ -139,19 +206,20 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
         setIsDisable,
         handelNextQuestion,
         setIsRoundFinished,
-        timeInerval,
+        timerRef,
         setTimeLeft,
         initialTime,
         cheackVictory,
-
     }
+
     const timerProps = {
         handelTimeOver,
         timeLeft,
         setTimeLeft,
-        timeInerval,
+        timerRef,
         initialTime
     }
+
     const finalScreenProps = {
         roomId,
         results,
@@ -159,6 +227,7 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
         handelNewGame,
         players,
     }
+
     const scoreTableProps = {
         roomId,
         players,
@@ -170,21 +239,28 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
     }
 
     return (
-        <main className='gc2 flex-col flex-sb '>
-            <article className='trivia-container  '>
-                {isGameOver ?
-                    <FinalScreen {...finalScreenProps} /> :
+        <main className='gc2 flex-col flex-sb'>
+            <article className='trivia-container'>
 
-                    isRoundFinished ?
-                        <ScoreTable {...scoreTableProps} /> :
-                        <>
-                            <Timer {...timerProps} />
-                            <TrivaPreview  {...triviaPreviewProps} />
-                        </>
+                {
+                    isGameOver ?
 
+                        <FinalScreen {...finalScreenProps} />
+
+                        :
+
+                        isRoundFinished ?
+
+                            <ScoreTable {...scoreTableProps} />
+
+                            :
+
+                            <>
+                                <Timer {...timerProps} />
+
+                                <TrivaPreview {...triviaPreviewProps} />
+                            </>
                 }
-
-
 
             </article>
         </main>

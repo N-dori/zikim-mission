@@ -1,64 +1,88 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 
 type TimerProps = {
-    timeLeft:number
-    setTimeLeft:React.Dispatch<React.SetStateAction<number>>
-    handelTimeOver:()=>void
-    timeInerval:any
-    initialTime:number
+    timeLeft: number
+    setTimeLeft: React.Dispatch<React.SetStateAction<number>>
+    handelTimeOver: () => void
+    timerRef: React.MutableRefObject<NodeJS.Timeout | null>
+    initialTime: number
 }
 
-export default function Timer({initialTime,timeInerval,setTimeLeft, timeLeft, handelTimeOver}: TimerProps) {
-  
-
+export default function Timer({
+    initialTime,
+    timerRef,
+    setTimeLeft,
+    timeLeft,
+    handelTimeOver
+}: TimerProps) {
 
     useEffect(() => {
-      timeInerval = setInterval(() => {
-            if (timeLeft > 0) {
-                setTimeLeft((prevTime) => prevTime - 0.1);
-            } else {
-                clearInterval(timeInerval);
-                handelTimeOver()
-            }
-        }, 100);
+
+        clearInterval(timerRef.current!)
+
+        timerRef.current = setInterval(() => {
+
+            setTimeLeft(prevTime => {
+
+                const nextTime = +(prevTime - 0.1).toFixed(1)
+
+                if (nextTime <= 0) {
+
+                    clearInterval(timerRef.current!)
+
+                    handelTimeOver()
+
+                    return 0
+                }
+
+                return nextTime
+            })
+
+        }, 100)
 
         return () => {
-            clearInterval(timeInerval)};
-    }, [timeLeft]);
+            clearInterval(timerRef.current!)
+        }
 
-  
+    }, [])
 
     const calculateAngle = (): number => {
-        const percentage = (timeLeft / (initialTime - 15)) * 100; // Calculate percentage of time left
-        const angle = (percentage / 100) * 360; // Calculate current angle based on percentage
-        return angle;
-    };
 
+        const percentage = (timeLeft / initialTime) * 100
 
-  return (
+        const angle = (percentage / 100) * 360
 
-    <section className='flex-jc-ac'>
+        return angle
+    }
+
+    return (
+        <section className='flex-jc-ac'>
 
             <div className="timer-circle-container flex-jc-ac">
-            <svg viewBox="0 0 100 100" className="timer-circle-svg">
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    className="timer-circle"
-                    style={{
-                        strokeDasharray: `${calculateAngle()} 360`,
-                        strokeDashoffset: `0`,
-                    }}
-                />
-            </svg>
-            <div className="timer-info">
-                <p className='txt'>{timeLeft.toFixed(1)}</p>
+
+                <svg viewBox="0 0 100 100" className="timer-circle-svg">
+
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        className="timer-circle"
+                        style={{
+                            strokeDasharray: `${calculateAngle()} 360`,
+                            strokeDashoffset: `0`,
+                        }}
+                    />
+
+                </svg>
+
+                <div className="timer-info">
+                    <p className='txt'>
+                        {timeLeft.toFixed(1)}
+                    </p>
+                </div>
+
             </div>
-        </div>
-    </section>
 
-
-
-  )
+        </section>
+    )
 }
