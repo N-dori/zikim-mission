@@ -4,7 +4,6 @@ import GroupNameForm from './GroupNameForm'
 import NicknameFrom from './NicknameFrom'
 import { useRouter } from 'next/navigation'
 import { Troom } from '@/app/types/types'
-import { getSocket } from '@/app/libs/socket'
 import { apiFetch } from '@/app/libs/apiClient'
 
 export default function CreatePlayer() {
@@ -34,8 +33,7 @@ export default function CreatePlayer() {
             let { room } = await resRoom.json()
 
             if (room) {
-                const isFirstRegistered = false
-                addPlayer(room, nickName, imgUrl, isFirstRegistered);
+                addPlayer(room, nickName, imgUrl)
                 return
             }
 
@@ -49,8 +47,7 @@ export default function CreatePlayer() {
             }
             let { newRoom } = await res.json()
             if (newRoom) {
-                const isFirstRegistered = true
-                addPlayer(newRoom, nickName, imgUrl, isFirstRegistered)
+                addPlayer(newRoom, nickName, imgUrl)
             } else {
                 throw new Error('could not open a new room');
             }
@@ -60,21 +57,14 @@ export default function CreatePlayer() {
         }
     }
 
-    const addPlayer = async (room: Troom, nickName: string, imgUrl: string, isFirstRegistered: boolean) => {
+    const addPlayer = async (room: Troom, nickName: string, imgUrl: string) => {
 
         const player = {
             roomId: room.id,
             name: nickName,
             nickName,
             img: imgUrl,
-            isAdmin: isFirstRegistered,
-            answers: [
-                {
-                    score: 0,
-                    time: 0,
-                    isVinner: false,
-                }
-            ]
+            answers: [],
         }
 
         const bodyReq = {
@@ -91,8 +81,6 @@ export default function CreatePlayer() {
             return
         }
 
-        const socket = await getSocket()
-        socket.emit('playerAdded', { player, roomId: room.id });
         if (res.ok) {
             try {
                 sessionStorage.setItem(`trivia:nickName:${room.id}`, nickName)

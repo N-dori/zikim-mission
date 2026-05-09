@@ -7,30 +7,34 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL!
 let socket: Socket | null = null
 let connectingPromise: Promise<Socket> | null = null
 
-export async function getSocket(): Promise<Socket> {
+let serverClockOffset = 0
+
+export function getSocket(): Promise<Socket> {
   if (typeof window === 'undefined') {
     throw new Error('getSocket() called on the server')
   }
-  if (socket) return socket
+  if (socket) return Promise.resolve(socket)
   if (connectingPromise) return connectingPromise
 
   connectingPromise = (async () => {
     const token = await getApiToken()
-    socket = io(API_BASE, {
+    const s = io(API_BASE, {
       auth: token ? { token } : undefined,
       autoConnect: true,
       transports: ['websocket', 'polling'],
     })
+    socket = s
     connectingPromise = null
-    return socket
+    return s
   })()
 
   return connectingPromise
 }
 
-export async function joinRoom(roomId: string): Promise<void> {
-  if (!roomId) return
-  const s = await getSocket()
-  if (s.connected) s.emit('joinRoom', { roomId })
-  else s.once('connect', () => s.emit('joinRoom', { roomId }))
+export function recordServerNow(serverNow: number): void {
+  serverClockOffset = serverNow - Date.now()
+}
+
+export function getServerNow(): number {
+  return Date.now() + serverClockOffset
 }

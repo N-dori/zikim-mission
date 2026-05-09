@@ -1,8 +1,7 @@
 "use client"
 
-import { Tplayer } from '@/app/types/types'
-import React, { useEffect } from 'react'
-import { getSocket } from '@/app/libs/socket'
+import { Tplayer, TserverPlayer } from '@/app/types/types'
+import React from 'react'
 import BeatLoader from "react-spinners/BeatLoader"
 import PlayersList from './PlayersList'
 
@@ -10,76 +9,22 @@ type WaitingListProps = {
     roomId: string
     groupName: string | null
     currPlayer: Tplayer | null
-    setCurrPlayer: React.Dispatch<React.SetStateAction<Tplayer | null>>
-    setIsAllReady: (isAllReady: boolean) => void
-    getData: (_id: string) => void
-    setPlayers: React.Dispatch<React.SetStateAction<Tplayer[]>>
     players: Tplayer[]
+    serverPlayers: TserverPlayer[]
+    isAdmin: boolean
+    onStartGame: () => void
 }
 
 export default function WaitingList({
-    roomId,
     groupName,
     currPlayer,
     players,
-    getData,
-    setPlayers,
-    setIsAllReady
+    serverPlayers,
+    isAdmin,
+    onStartGame,
 }: WaitingListProps) {
 
-    useEffect(() => {
-        getData(roomId)
-    }, [roomId])
-
-    useEffect(() => {
-
-        let cleanup: (() => void) | undefined
-
-        ;(async () => {
-
-            const socket = await getSocket()
-
-            socket.off('playerAdded')
-            socket.off('allHere')
-
-            const handlePlayerAdded = ({ player }: { player: Tplayer }) => {
-
-                setPlayers((prevPlayers) => {
-
-                    const exists = prevPlayers.some(
-                        p => p._id === player._id
-                    )
-
-                    if (exists) return prevPlayers
-
-                    return [...prevPlayers, player]
-                })
-            }
-
-            const handleAllHere = () => {
-                setIsAllReady(true)
-            }
-
-            socket.on('playerAdded', handlePlayerAdded)
-            socket.on('allHere', handleAllHere)
-
-            cleanup = () => {
-                socket.off('playerAdded')
-                socket.off('allHere')
-            }
-
-        })()
-
-        return () => cleanup?.()
-
-    }, [roomId])
-
-    const handelAllHere = async () => {
-
-        const socket = await getSocket()
-
-        socket.emit('allHere', { roomId })
-    }
+    const merged = mergePlayers(players, serverPlayers)
 
     return (
         <section className='waiting-room-container flex-col gap3'>
@@ -94,10 +39,10 @@ export default function WaitingList({
             <section className='start-game-btn-container flex-jc-ac'>
 
                 {
-                    currPlayer?.isAdmin ?
+                    currPlayer && isAdmin ?
 
                         <button
-                            onClick={handelAllHere}
+                            onClick={onStartGame}
                             className='start-game-btn pointer'
                         >
                             אתה מנהל החדר, כשכולם כאן
@@ -133,8 +78,27 @@ export default function WaitingList({
                 מי כבר כאן...
             </p>
 
-            <PlayersList players={players} />
+            <PlayersList players={merged} />
 
         </section>
     )
+}
+
+function mergePlayers(rest: Tplayer[], live: TserverPlayer[]): Tplayer[] {
+    if (live.length === 0) return rest
+    const byNick = new Map<string, Tplayer>()
+    for (const p of rest) byNick.set(p.nickName, p)
+    for (const p of live) {
+        if (!byNick.has(p.nickName)) {
+            byNick.set(p.nickName, {
+                _id: p.playerId,
+                name: p.nickName,
+                nickName: p.nickName,
+                img: p.img,
+                answers: [],
+                isAdmin: false,
+            })
+        }
+    }
+    return Array.from(byNick.values())
 }

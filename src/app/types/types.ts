@@ -46,3 +46,63 @@ export type Troom = {
         participants: Tplayer[]
 
 }
+
+export type Phase = 'WAITING' | 'QUESTION' | 'REVEAL' | 'FINAL'
+
+export type TserverPlayer = {
+        playerId: string,
+        nickName: string,
+        img: string,
+}
+
+export type TscoreSummary = {
+        playerId: string,
+        nickName: string,
+        img: string,
+        totalScore: number,
+        totalTime: number,
+        victories: number,
+}
+
+export type TserverSnapshot = {
+        phase: Phase,
+        qIndex: number,
+        roundStartedAt: number,
+        roundEndsAt: number,
+        serverNow: number,
+        players: TserverPlayer[],
+        answers: Tanswer[],
+        adminId: string | null,
+        roundWinnerAnswerId?: string | null,
+        finalScoreboard?: TscoreSummary[] | null,
+}
+
+export type TgameState = {
+        phase: Phase,
+        qIndex: number,
+        roundStartedAt: number,
+        roundEndsAt: number,
+        players: TserverPlayer[],
+        adminId: string | null,
+        answers: Tanswer[],
+        roundWinnerAnswerId: string | null,
+        finalScoreboard: TscoreSummary[] | null,
+        myAnswerSubmitted: boolean,
+}
+
+export type TgameAction =
+        | { type: 'SYNC'; snapshot: TserverSnapshot }
+        | { type: 'ROUND_START'; qIndex: number; startedAt: number; endsAt: number }
+        | { type: 'ANSWER_ADDED'; answer: Tanswer; selfPlayerId: string | null }
+        | {
+                type: 'ROUND_END'
+                qIndex: number
+                winnerAnswerId: string | null
+                answers: Tanswer[]
+          }
+        | { type: 'GAME_OVER'; scoreboard: TscoreSummary[] }
+        | { type: 'PLAYER_JOIN'; player: TserverPlayer }
+        | { type: 'PLAYER_LEFT'; playerId: string }
+        | { type: 'ADMIN_CHANGED'; adminId: string }
+        | { type: 'OPTIMISTIC_SUBMIT' }
+        | { type: 'RESET' }

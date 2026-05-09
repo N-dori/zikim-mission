@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import WaitingList from './WaitingList'
-import { Tanswer, Tplayer } from '@/app/types/types'
+import { Tplayer } from '@/app/types/types'
 import GroupTriviaGame from './GroupTriviaGame'
-import { getSocket, joinRoom } from '@/app/libs/socket'
 import { apiFetch } from '@/app/libs/apiClient'
+import { useGameSocket } from './useGameSocket'
 
 type GroupRoomProps = {
     roomId: string
@@ -15,102 +15,21 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
 
     const [currPlayer, setCurrPlayer] = useState<Tplayer | null>(null)
     const [groupName, setGroupName] = useState<string | null>(null)
-    const [isAllReady, setIsAllReady] = useState<boolean>(false)
     const [players, setPlayers] = useState<Tplayer[]>([])
+    const [needsNickName, setNeedsNickName] = useState(false)
 
-    const scoresRef = useRef<Tanswer[]>([])
+    const { state, actions, selfPlayerId, isAdmin } = useGameSocket(
+        roomId,
+        currPlayer ? currPlayer.nickName : null,
+        currPlayer ? currPlayer.img : null,
+    )
 
-    useEffect(() => {
-
-        let cleanup: (() => void) | undefined
-
-        ;(async () => {
-
-            const socket = await getSocket()
-
-            await joinRoom(roomId)
-
-            socket.off('allHere')
-
-            const handleAllHere = () => {
-                setIsAllReady(true)
-            }
-
-            socket.on('allHere', handleAllHere)
-
-            cleanup = () => {
-                socket.off('allHere')
-            }
-
-        })()
-
-        return () => cleanup?.()
-
-    }, [roomId])
-
-    const addPlayerScore = (newScore: Tanswer) => {
-
-        const idx = scoresRef.current.findIndex(
-            ans => ans.answerId === newScore.answerId
-        )
-
-        // first insert
-        if (idx === -1) {
-            scoresRef.current.push(newScore)
-            return
-        }
-
-        // keep best answer
-        const existing = scoresRef.current[idx]
-
-        const incomingIsBetter =
-            newScore.score > existing.score ||
-            (
-                newScore.score === existing.score &&
-                newScore.time < existing.time
-            )
-
-        if (incomingIsBetter) {
-            scoresRef.current[idx] = newScore
-        }
-    }
-
-    const cheackVictory = () => {
-
-        if (!scoresRef.current.length) return
-
-        const latestQuestionId =
-            scoresRef.current[scoresRef.current.length - 1]?.questionId
-
-        if (latestQuestionId === undefined) return
-
-        const roundAnswers = scoresRef.current.filter(ans =>
-            ans.questionId === latestQuestionId &&
-            ans.score > 0
-        )
-
-        if (!roundAnswers.length) return
-
-        roundAnswers.sort((a, b) => a.time - b.time)
-
-        const winner = roundAnswers[0]
-
-        const idx = scoresRef.current.findIndex(
-            ans => ans.answerId === winner.answerId
-        )
-
-        if (idx !== -1) {
-            scoresRef.current[idx].isVinner = true
-        }
-    }
-
-    const getData = async (_id: string) => {
+    const getData = useCallback(async (_id: string) => {
 
         if (!_id) return
 
         const res = await apiFetch('/trivia/getParticipants', {
             method: 'POST',
-            auth: false,
             headers: { 'Cache-Control': 'no-cache' },
             body: JSON.stringify({ id: _id })
         })
@@ -132,60 +51,54 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
                 ? sessionStorage.getItem(`trivia:nickName:${roomId}`)
                 : null
 
-        const client = room.participants.find(
-            (player: Tplayer) => player.nickName === myNickName
-        )
+        const me = myNickName
+            ? room.participants.find((p: Tplayer) => p.nickName === myNickName)
+            : null
 
-        if (client) {
-            setCurrPlayer(client)
+        if (me) {
+            setCurrPlayer(me)
         } else {
-            setCurrPlayer(room.participants[room.participants.length - 1])
+            setNeedsNickName(true)
         }
+    }, [roomId])
+
+    useEffect(() => {
+        getData(roomId)
+    }, [roomId, getData])
+
+    if (needsNickName) {
+        return (
+            <section className='waiting-room-container flex-col gap3'>
+                <h1 className='tac'>נא להירשם לחדר זה דרך עמוד הקבוצה</h1>
+                <a className='start-game-btn flex-jc-ac' href='/179trivia/group'>
+                    חזרה לרישום
+                </a>
+            </section>
+        )
     }
 
-    if (!currPlayer) {
+    if (!currPlayer || state.phase === 'WAITING') {
         return (
             <WaitingList
                 roomId={roomId}
-                setCurrPlayer={setCurrPlayer}
                 currPlayer={currPlayer}
-                setIsAllReady={setIsAllReady}
-                getData={getData}
-                setPlayers={setPlayers}
                 players={players}
+                serverPlayers={state.players}
                 groupName={groupName}
+                isAdmin={isAdmin}
+                onStartGame={actions.startGame}
             />
         )
     }
 
     return (
-        <>
-            {
-                isAllReady ?
-
-                    <GroupTriviaGame
-                        roomId={roomId}
-                        players={players}
-                        currPlayer={currPlayer}
-                        setCurrPlayer={setCurrPlayer}
-                        addPlayerScore={addPlayerScore}
-                        cheackVictory={cheackVictory}
-                        results={scoresRef.current}
-                    />
-
-                    :
-
-                    <WaitingList
-                        roomId={roomId}
-                        setCurrPlayer={setCurrPlayer}
-                        currPlayer={currPlayer}
-                        setIsAllReady={setIsAllReady}
-                        getData={getData}
-                        setPlayers={setPlayers}
-                        players={players}
-                        groupName={groupName}
-                    />
-            }
-        </>
+        <GroupTriviaGame
+            roomId={roomId}
+            currPlayer={currPlayer}
+            state={state}
+            actions={actions}
+            selfPlayerId={selfPlayerId}
+            isAdmin={isAdmin}
+        />
     )
 }
