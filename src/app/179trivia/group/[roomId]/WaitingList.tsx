@@ -1,19 +1,9 @@
 "use client"
 
-import { Tplayer, TserverPlayer } from '@/app/types/types'
+import { Tplayer, TserverPlayer, WaitingListProps } from '@/app/types/types'
 import React from 'react'
 import BeatLoader from "react-spinners/BeatLoader"
 import PlayersList from './PlayersList'
-
-type WaitingListProps = {
-    roomId: string
-    groupName: string | null
-    currPlayer: Tplayer | null
-    players: Tplayer[]
-    serverPlayers: TserverPlayer[]
-    isAdmin: boolean
-    onStartGame: () => void
-}
 
 export default function WaitingList({
     groupName,

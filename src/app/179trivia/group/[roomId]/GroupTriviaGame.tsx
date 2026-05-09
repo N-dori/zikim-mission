@@ -3,22 +3,12 @@
 import React, { useEffect, useState } from 'react'
 import { Question } from '@/app/assets/data/triviaData'
 import { TrivaPreview } from '@/app/cmps/TrivaPreview'
-import { Tplayer, TgameState } from '@/app/types/types'
+import { GroupTriviaGameProps } from '@/app/types/types'
 import Timer from './Timer'
 import ScoreTable from './ScoreTable'
 import FinalScreen from './FinalScreen'
 import { getQuestions } from '@/app/libs/triviaQuestions'
-import { GameActions } from './useGameSocket'
 import { BeatLoader } from 'react-spinners'
-
-type GroupTriviaGameProps = {
-    roomId: string
-    currPlayer: Tplayer
-    state: TgameState
-    actions: GameActions
-    selfPlayerId: string | null
-    isAdmin: boolean
-}
 
 export default function GroupTriviaGame({
     roomId,

@@ -2,14 +2,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import WaitingList from './WaitingList'
-import { Tplayer } from '@/app/types/types'
+import { GroupRoomProps, Tplayer } from '@/app/types/types'
 import GroupTriviaGame from './GroupTriviaGame'
 import { apiFetch } from '@/app/libs/apiClient'
 import { useGameSocket } from './useGameSocket'
-
-type GroupRoomProps = {
-    roomId: string
-}
 
 export default function GroupRoom({ roomId }: GroupRoomProps) {
 

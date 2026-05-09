@@ -2,11 +2,7 @@
 
 import React, { useEffect, useReducer } from 'react'
 import { getServerNow } from '@/app/libs/socket'
-
-type TimerProps = {
-    roundStartedAt: number
-    roundEndsAt: number
-}
+import { TimerProps } from '@/app/types/types'
 
 export default function Timer({ roundStartedAt, roundEndsAt }: TimerProps) {
 

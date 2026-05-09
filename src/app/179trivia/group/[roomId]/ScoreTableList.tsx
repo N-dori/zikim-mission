@@ -1,13 +1,7 @@
-import { Tanswer, TscoreSummary, TserverPlayer } from '@/app/types/types'
+import { ScoreTableListProps, TscoreSummary } from '@/app/types/types'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { buildScoreSummaries } from './gameReducer'
-
-type ScoreTableListProps = {
-  players: TserverPlayer[]
-  results?: Tanswer[]
-  precomputed?: TscoreSummary[] | null
-}
 
 export default function ScoreTableList({ players, results, precomputed }: ScoreTableListProps) {
 

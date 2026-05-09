@@ -1,21 +1,9 @@
-import { Question } from '@/app/assets/data/triviaData'
-import { Tanswer, TserverPlayer } from '@/app/types/types'
+import { ScoreTableProps } from '@/app/types/types'
 import React, { useState } from 'react'
 import Explantion from './Explantion'
 import { BeatLoader } from 'react-spinners'
 import ScoreTableList from './ScoreTableList'
 import { CheckSvg } from '@/app/assets/svgs/CheckSvg'
-
-type ScoreTableProps = {
-  roomId: string
-  players: TserverPlayer[]
-  question: Question
-  results: Tanswer[]
-  roundWinnerAnswerId: string | null
-  isAdmin: boolean
-  onNextQuestion: () => void
-  isLastQuestion: boolean
-}
 
 export default function ScoreTable({
   players,

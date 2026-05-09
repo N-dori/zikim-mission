@@ -1,3 +1,5 @@
+import type { Question } from '@/app/assets/data/triviaData'
+
 export interface Tuser {
         _id: string,
         name: string,
@@ -106,3 +108,95 @@ export type TgameAction =
         | { type: 'ADMIN_CHANGED'; adminId: string }
         | { type: 'OPTIMISTIC_SUBMIT' }
         | { type: 'RESET' }
+
+export type TroundStartEvt = {
+        qIndex: number,
+        startedAt: number,
+        endsAt: number,
+        serverNow: number,
+}
+
+export type TroundEndEvt = {
+        qIndex: number,
+        winnerAnswerId: string | null,
+        answers: Tanswer[],
+}
+
+export type TgameOverEvt = {
+        scoreboard: TscoreSummary[],
+}
+
+export type TgameActions = {
+        startGame: () => void,
+        submitAnswer: (score: 0 | 1, optionId: string) => void,
+        nextQuestion: () => void,
+        requestSync: () => void,
+}
+
+export type TuseGameSocketResult = {
+        state: TgameState,
+        actions: TgameActions,
+        selfPlayerId: string | null,
+        isAdmin: boolean,
+}
+
+export type GroupRoomProps = {
+        roomId: string,
+}
+
+export type WaitingListProps = {
+        roomId: string,
+        groupName: string | null,
+        currPlayer: Tplayer | null,
+        players: Tplayer[],
+        serverPlayers: TserverPlayer[],
+        isAdmin: boolean,
+        onStartGame: () => void,
+}
+
+export type GroupTriviaGameProps = {
+        roomId: string,
+        currPlayer: Tplayer,
+        state: TgameState,
+        actions: TgameActions,
+        selfPlayerId: string | null,
+        isAdmin: boolean,
+}
+
+export type TimerProps = {
+        roundStartedAt: number,
+        roundEndsAt: number,
+}
+
+export type TrivaPreviewProps = {
+        question: Question,
+        disabled: boolean,
+        onAnswer: (score: 0 | 1, optionId: string) => void,
+}
+
+export type ScoreTableProps = {
+        roomId: string,
+        players: TserverPlayer[],
+        question: Question,
+        results: Tanswer[],
+        roundWinnerAnswerId: string | null,
+        isAdmin: boolean,
+        onNextQuestion: () => void,
+        isLastQuestion: boolean,
+}
+
+export type ScoreTableListProps = {
+        players: TserverPlayer[],
+        results?: Tanswer[],
+        precomputed?: TscoreSummary[] | null,
+}
+
+export type FinalScreenProps = {
+        roomId: string,
+        winHeight: { height: number },
+        scoreboard: TscoreSummary[] | null,
+}
+
+export type PlayersListProps = {
+        players: Tplayer[],
+}

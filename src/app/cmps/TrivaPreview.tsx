@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Question } from '../assets/data/triviaData'
+import { TrivaPreviewProps } from '../types/types'
 
 function shuffleArray<T>(arr: readonly T[]): T[] {
     const next = [...arr]
@@ -8,12 +8,6 @@ function shuffleArray<T>(arr: readonly T[]): T[] {
         ;[next[i], next[j]] = [next[j], next[i]]
     }
     return next
-}
-
-type TrivaPreviewProps = {
-    question: Question
-    disabled: boolean
-    onAnswer: (score: 0 | 1, optionId: string) => void
 }
 
 export function TrivaPreview({ question, disabled, onAnswer }: TrivaPreviewProps) {
