@@ -20,7 +20,6 @@ type TscoreSummery = {
 }
 
 export default function ScoreTableList({ roomId, players, results }: ScoreTableListProps) {
-  const [scoresSummery, setScoresSummery] = useState<TscoreSummery[]>([])
   const [scoreTable, setScoreTable] = useState<TscoreSummery[]>([])
   const uniqueResultsRef = useRef([])
   const scoresSummeryRef = useRef<TscoreSummery[]>([])

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import WaitingList from './WaitingList'
-import { Tanswer, Tplayer, Troom } from '@/app/types/types'
+import { Tanswer, Tplayer } from '@/app/types/types'
 import GroupTriviaGame from './GroupTriviaGame'
 import { removeDuplicates } from '@/app/utils/utils'
 import { getSocket, joinRoom } from '@/app/libs/socket'
@@ -17,7 +17,6 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     const [groupName, setGroupName] = useState<string | null>(null)
     const [isAllReady, setIsAllReady] = useState<boolean>(false)
     const [players, setPlayers] = useState<Tplayer[]>([])
-    const [playersScores, setPlayersScores] = useState<Tanswer[]>([])
     const scoresRef=useRef<Tanswer[]>([])
  
     useEffect(() => {
@@ -33,50 +32,61 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     }, [roomId]);
 
     const addPlayerScore = (newScore: Tanswer) => {
-   
-        scoresRef.current.push(newScore)  
+        const key = (a: Tanswer) => `${a.nickName ?? a.playerId}-${a.questionId}`
+        const idx = scoresRef.current.findIndex(a => key(a) === key(newScore))
+        if (idx === -1) {
+            scoresRef.current.push(newScore)
+            return
+        }
+        // Same (player, question) already recorded — keep the better one.
+        // Higher score wins; on a tie keep the faster (lower time).
+        const existing = scoresRef.current[idx]
+        const incomingIsBetter =
+            newScore.score > existing.score ||
+            (newScore.score === existing.score && newScore.time < existing.time)
+        if (incomingIsBetter) scoresRef.current[idx] = newScore
     }
 
    
     const cheackVictory = () => {
         //cause we deal with sockets socres that not belong to current players are being added to scores ref and there is a need to remove them 
             const uniqueAnswers = removeDuplicates(scoresRef.current);
-        // this func toggel the isVinner key of this round vinner
-            getThisRoundVinner(uniqueAnswers);
+        // this func toggle the is winner key of this round winner
+            getThisRoundWinner(uniqueAnswers);
     };
 
-    const getThisRoundVinner = (playersScores: Tanswer[]) => {
+    const getThisRoundWinner = (playersScores: Tanswer[]) => {
 
-        let lastCurrectAnswers: Tanswer[] = []
+        let lastCorrectAnswers: Tanswer[] = []
         // first getting last currect answers , push only the currect ones to lastCurrectAnswers
         playersScores.forEach((ans) => {
             const thisRoundAnswers:Tanswer[] = []
             const questionId= playersScores[playersScores.length-1].questionId
             if(ans.questionId === questionId ){
-                if(ans.score)  lastCurrectAnswers.push(ans)
+                if(ans.score)  lastCorrectAnswers.push(ans)
             }
           
         })
         
-        let sortedCurrectAns: Tanswer[] = []
-        if (lastCurrectAnswers.length) {
+        let sortedCorrectAns: Tanswer[] = []
+        if (lastCorrectAnswers.length) {
             // if there is only one obj in lastCurrectAnswers than he is the vinner of this round
-            if(lastCurrectAnswers.length === 1) return  toggelIsVinner(lastCurrectAnswers[0])
-         // if there is more than one obj in lastCurrectAnswers we sort by time and take the first one
-            sortedCurrectAns = lastCurrectAnswers.sort((a, b) => {
+            if(lastCorrectAnswers.length === 1) return  toggleIsWinner(lastCorrectAnswers[0])
+         // if there is more than one obj in lastCorrectAnswers we sort by time and take the first one
+            sortedCorrectAns = lastCorrectAnswers.sort((a, b) => {
                 return  a.time - b.time 
             });
             // console.log('sortedCurrectAns', sortedCurrectAns);
-            toggelIsVinner(sortedCurrectAns[0])
+            toggleIsWinner(sortedCorrectAns[0])
         } else {
             // case ther is no currect answers return null  
             return null
         }
     }
-    const toggelIsVinner = (vinner:Tanswer) => {
+    const toggleIsWinner = (winner:Tanswer) => {
         const idx = scoresRef.current.findIndex(ans => (
-            ans.questionId === vinner.questionId &&
-            (ans.nickName ?? ans.playerId) === (vinner.nickName ?? vinner.playerId)
+            ans.questionId === winner.questionId &&
+            (ans.nickName ?? ans.playerId) === (winner.nickName ?? winner.playerId)
         ))
         if (idx === -1) return
         scoresRef.current[idx].isVinner = true

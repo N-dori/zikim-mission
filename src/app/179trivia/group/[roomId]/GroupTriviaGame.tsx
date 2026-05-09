@@ -33,6 +33,9 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
     const [isRoundFinished, setIsRoundFinished] = useState<boolean>(false); // gets updated after time of each round is over
     const [isDisable, setIsDisable] = useState(false)//for one knowing if player already pick an an answer and two for not leting to pick another answer
     const questIndex = useRef(0)
+    // Synchronous guard — prevents the timer-expiry path from emitting a 0-score
+    // when the player already clicked an answer (isDisable flips async via state).
+    const answeredQuestionRef = useRef<number | null>(null)
 
 
 
@@ -63,7 +66,7 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
     const getNextQuestion = () => {
         incrementQuestionIndex()
         setIsRoundFinished(false)
-
+        answeredQuestionRef.current = null
     }
     const handelNextQuestion = async () => {
         const socket = await getSocket()
@@ -80,6 +83,8 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
     }
 
     const handelAnswerClicked = async (score: number, timeLeft: number, isVinner: boolean) => {
+        if (answeredQuestionRef.current === questIndex.current) return
+        answeredQuestionRef.current = questIndex.current
         clearInterval(timeInerval);
         const newScore = {
             score,
@@ -103,11 +108,13 @@ export default function GroupTriviaGame({ roomId, results, players, currPlayer, 
 
     const handelTimeOver = async () => {
 
+        if (answeredQuestionRef.current === questIndex.current) return
         let isPlayerPickedAnswer: boolean = isDisable // all buttons are disabled if it is true
         if (isPlayerPickedAnswer) {
             console.log('isPlayerPickedAnswer', isPlayerPickedAnswer);
             return
         }
+        answeredQuestionRef.current = questIndex.current
         const newScore = {
             score: 0,
             time: initialTime,
