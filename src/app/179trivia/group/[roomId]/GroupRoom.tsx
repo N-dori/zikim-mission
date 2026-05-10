@@ -86,7 +86,13 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
             />
         )
     }
-
+console.log({
+  adminId: state.adminId,
+  selfPlayerId,
+  isAdmin,
+  statePlayers: state.players,
+  currPlayer,
+})
     return (
         <GroupTriviaGame
             roomId={roomId}
