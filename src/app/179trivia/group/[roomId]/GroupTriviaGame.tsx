@@ -15,6 +15,7 @@ export default function GroupTriviaGame({
     state,
     actions,
     isAdmin,
+    dbPlayerCount,
 }: GroupTriviaGameProps) {
 
     const [winHeight, setWinHeight] = useState<{ height: number }>({ height: 450 })
@@ -66,6 +67,7 @@ export default function GroupTriviaGame({
                         roomId={roomId}
                         winHeight={winHeight}
                         scoreboard={state.finalScoreboard}
+                        dbPlayerCount={dbPlayerCount}
                     />
                 ) : state.phase === 'REVEAL' && currentQuestion ? (
                     <ScoreTable
@@ -77,6 +79,7 @@ export default function GroupTriviaGame({
                         isAdmin={isAdmin}
                         onNextQuestion={actions.nextQuestion}
                         isLastQuestion={isLastQuestion}
+                        dbPlayerCount={dbPlayerCount}
                     />
                 ) : state.phase === 'QUESTION' && currentQuestion ? (
                     <>

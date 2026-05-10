@@ -8,9 +8,10 @@ type FinalScreenProps = {
   roomId: string
   winHeight: { height: number }
   scoreboard: TscoreSummary[] | null
+  dbPlayerCount?: number | null
 }
 
-export default function FinalScreen({ winHeight, scoreboard }: FinalScreenProps) {
+export default function FinalScreen({ winHeight, scoreboard, dbPlayerCount }: FinalScreenProps) {
 
   return (
     <section
@@ -23,7 +24,7 @@ export default function FinalScreen({ winHeight, scoreboard }: FinalScreenProps)
         כל הכבוד !!!
       </p>
 
-      <ScoreTableList players={[]} precomputed={scoreboard} />
+      <ScoreTableList players={[]} precomputed={scoreboard} dbPlayerCount={dbPlayerCount} />
 
       <Link
         className='no-under-line back-btn tac'

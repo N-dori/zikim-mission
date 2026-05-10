@@ -161,6 +161,7 @@ export type GroupTriviaGameProps = {
         actions: TgameActions,
         selfPlayerId: string | null,
         isAdmin: boolean,
+        dbPlayerCount?: number | null,
 }
 
 export type TimerProps = {
@@ -183,18 +184,21 @@ export type ScoreTableProps = {
         isAdmin: boolean,
         onNextQuestion: () => void,
         isLastQuestion: boolean,
+        dbPlayerCount?: number | null,
 }
 
 export type ScoreTableListProps = {
         players: TserverPlayer[],
         results?: Tanswer[],
         precomputed?: TscoreSummary[] | null,
+        dbPlayerCount?: number | null,
 }
 
 export type FinalScreenProps = {
         roomId: string,
         winHeight: { height: number },
         scoreboard: TscoreSummary[] | null,
+        dbPlayerCount?: number | null,
 }
 
 export type PlayersListProps = {

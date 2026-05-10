@@ -12,6 +12,7 @@ export default function ScoreTable({
   isAdmin,
   onNextQuestion,
   isLastQuestion,
+  dbPlayerCount,
 }: ScoreTableProps) {
 
   const [isExplantionShown, setIsExplantionShown] = useState<boolean>(false)
@@ -44,7 +45,7 @@ export default function ScoreTable({
       )}
 
       {!isExplantionShown ? (
-        <ScoreTableList players={players} results={results} />
+        <ScoreTableList players={players} results={results} dbPlayerCount={dbPlayerCount} />
       ) : (
         <Explantion {...explantionProps} />
       )}

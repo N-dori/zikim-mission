@@ -3,22 +3,31 @@ import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { buildScoreSummaries } from './gameReducer'
 
-export default function ScoreTableList({ players, results, precomputed }: ScoreTableListProps) {
+export default function ScoreTableList({ players, results, precomputed, dbPlayerCount }: ScoreTableListProps) {
 
   const summaries = useMemo<TscoreSummary[]>(() => {
     if (precomputed && precomputed.length) return precomputed
     return buildScoreSummaries(players, results || [])
   }, [precomputed, players, results])
 
+  const visibleSummaries = useMemo<TscoreSummary[]>(() => {
+    if (dbPlayerCount == null || summaries.length <= dbPlayerCount) return summaries
+    console.warn('[ScoreTable] dedup mismatch — trimming extras', {
+      rendered: summaries.length,
+      dbCount: dbPlayerCount,
+    })
+    return summaries.slice(0, dbPlayerCount)
+  }, [summaries, dbPlayerCount])
+
   const bestTime = useMemo(() => {
-    const scored = summaries.filter(p => p.totalScore > 0)
+    const scored = visibleSummaries.filter(p => p.totalScore > 0)
     if (!scored.length) return null
     return Math.min(...scored.map(p => p.totalTime))
-  }, [summaries])
+  }, [visibleSummaries])
 
   return (
     <section className='score-table-warpper flex-col flex-jc-ac'>
-      {summaries.map((player, i) => {
+      {visibleSummaries.map((player, i) => {
         const isRecord =
           bestTime !== null &&
           player.totalScore > 0 &&

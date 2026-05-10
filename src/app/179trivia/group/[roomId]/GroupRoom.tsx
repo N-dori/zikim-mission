@@ -13,6 +13,7 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     const [groupName, setGroupName] = useState<string | null>(null)
     const [players, setPlayers] = useState<Tplayer[]>([])
     const [needsNickName, setNeedsNickName] = useState(false)
+    const [dbPlayerCount, setDbPlayerCount] = useState<number | null>(null)
 
     const { state, actions, selfPlayerId, isAdmin } = useGameSocket(
         roomId,
@@ -40,6 +41,10 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
 
         if (room.participants) {
             setPlayers(room.participants)
+            const uniqueNicks = new Set(
+                (room.participants as Tplayer[]).map(p => p.nickName)
+            )
+            setDbPlayerCount(uniqueNicks.size)
         }
 
         const myNickName =
@@ -61,13 +66,15 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     useEffect(() => {
         getData(roomId)
     }, [roomId, getData])
-console.log({
-  adminId: state.adminId,
-  selfPlayerId,
-  isAdmin,
-  statePlayers: state.players,
-  currPlayer,
-})
+
+    useEffect(() => {
+        if (!roomId) return
+        const id = setInterval(() => {
+            getData(roomId).catch(() => { /* swallow poll errors */ })
+        }, 30_000)
+        return () => clearInterval(id)
+    }, [roomId, getData])
+
     if (needsNickName) {
         return (
             <section className='waiting-room-container flex-col gap3'>
@@ -101,6 +108,7 @@ console.log({
             actions={actions}
             selfPlayerId={selfPlayerId}
             isAdmin={isAdmin}
+            dbPlayerCount={dbPlayerCount}
         />
     )
 }

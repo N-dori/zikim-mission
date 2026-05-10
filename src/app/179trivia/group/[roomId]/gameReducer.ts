@@ -27,7 +27,7 @@ export function gameReducer(state: TgameState, action: TgameAction): TgameState 
         qIndex: action.snapshot.qIndex,
         roundStartedAt: action.snapshot.roundStartedAt,
         roundEndsAt: action.snapshot.roundEndsAt,
-        players: action.snapshot.players,
+        players: dedupPlayersByNickName(action.snapshot.players),
         adminId: action.snapshot.adminId,
         answers: action.snapshot.answers,
         roundWinnerAnswerId: action.snapshot.roundWinnerAnswerId ?? null,
@@ -76,8 +76,12 @@ export function gameReducer(state: TgameState, action: TgameAction): TgameState 
       }
 
     case 'PLAYER_JOIN': {
-      if (state.players.some(p => p.playerId === action.player.playerId)) return state
-      return { ...state, players: [...state.players, action.player] }
+      const filtered = state.players.filter(p => p.nickName !== action.player.nickName)
+      if (filtered.length === state.players.length) {
+        if (state.players.some(p => p.playerId === action.player.playerId)) return state
+        return { ...state, players: [...state.players, action.player] }
+      }
+      return { ...state, players: [...filtered, action.player] }
     }
 
     case 'PLAYER_LEFT':
@@ -106,26 +110,38 @@ function mergeAnswers(existing: Tanswer[], incoming: Tanswer[]): Tanswer[] {
   return Array.from(byId.values())
 }
 
+function dedupPlayersByNickName(players: TserverPlayer[]): TserverPlayer[] {
+  const byNick = new Map<string, TserverPlayer>()
+  for (const p of players) byNick.set(p.nickName, p)
+  return Array.from(byNick.values())
+}
+
 export function buildScoreSummaries(
   players: TserverPlayer[],
   answers: Tanswer[]
 ): TscoreSummary[] {
-  return players
-    .map(p => {
-      const ans = answers.filter(a => a.playerId === p.playerId)
-      return {
-        playerId: p.playerId,
-        nickName: p.nickName,
-        img: p.img,
-        totalScore: ans.reduce((s, a) => s + a.score, 0),
-        totalTime: ans.reduce((s, a) => s + a.time, 0),
-        victories: ans.filter(a => a.isVinner).length,
-      }
-    })
-    .sort(
-      (a, b) =>
-        b.totalScore - a.totalScore ||
-        a.totalTime - b.totalTime ||
-        b.victories - a.victories
-    )
+  const raw = players.map(p => {
+    const ans = answers.filter(a => a.playerId === p.playerId)
+    return {
+      playerId: p.playerId,
+      nickName: p.nickName,
+      img: p.img,
+      totalScore: ans.reduce((s, a) => s + a.score, 0),
+      totalTime: ans.reduce((s, a) => s + a.time, 0),
+      victories: ans.filter(a => a.isVinner).length,
+    }
+  })
+
+  const byNick = new Map<string, TscoreSummary>()
+  for (const s of raw) {
+    const existing = byNick.get(s.nickName)
+    if (!existing || s.totalScore > existing.totalScore) byNick.set(s.nickName, s)
+  }
+
+  return Array.from(byNick.values()).sort(
+    (a, b) =>
+      b.totalScore - a.totalScore ||
+      a.totalTime - b.totalTime ||
+      b.victories - a.victories
+  )
 }
