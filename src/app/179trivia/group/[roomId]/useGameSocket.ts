@@ -123,26 +123,44 @@ export function useGameSocket(
     }
 
     ;(async () => {
-      const socket = await getSocket()
-      if (cancelled) return
-      s = socket
-      socketRef.current = socket
+  const socket = await getSocket()
 
-      socket.on('connect', handleConnect)
-      socket.on('syncState', handleSyncState)
-      socket.on('roundStart', handleRoundStart)
-      socket.on('answerAdded', handleAnswerAdded)
-      socket.on('roundEnd', handleRoundEnd)
-      socket.on('gameOver', handleGameOver)
-      socket.on('playerJoined', handlePlayerJoined)
-      socket.on('playerLeft', handlePlayerLeft)
-      socket.on('adminChanged', handleAdminChanged)
+  if (cancelled) return
 
-      if (socket.connected) {
-        socket.emit('joinRoom', join)
-        socket.emit('syncRequest')
-      }
-    })()
+  s = socket
+  socketRef.current = socket
+
+  // REGISTER LISTENERS FIRST
+  socket.on('syncState', handleSyncState)
+  socket.on('roundStart', handleRoundStart)
+  socket.on('answerAdded', handleAnswerAdded)
+  socket.on('roundEnd', handleRoundEnd)
+  socket.on('gameOver', handleGameOver)
+  socket.on('playerJoined', handlePlayerJoined)
+  socket.on('playerLeft', handlePlayerLeft)
+  socket.on('adminChanged', handleAdminChanged)
+
+  socket.on('connect', handleConnect)
+
+  socket.on('connect_error', (err) => {
+    console.log('SOCKET CONNECT ERROR', err.message)
+  })
+
+  socket.on('disconnect', (reason) => {
+    console.log('SOCKET DISCONNECTED', reason)
+  })
+
+  console.log('SOCKET READY', {
+    connected: socket.connected,
+    id: socket.id,
+  })
+
+  // IMPORTANT:
+  // if socket already connected, manually trigger join
+  if (socket.connected) {
+    handleConnect()
+  }
+})()
 
     return () => {
       cancelled = true
