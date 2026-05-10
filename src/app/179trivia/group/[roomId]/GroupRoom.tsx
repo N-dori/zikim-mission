@@ -61,7 +61,13 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
     useEffect(() => {
         getData(roomId)
     }, [roomId, getData])
-
+console.log({
+  adminId: state.adminId,
+  selfPlayerId,
+  isAdmin,
+  statePlayers: state.players,
+  currPlayer,
+})
     if (needsNickName) {
         return (
             <section className='waiting-room-container flex-col gap3'>
@@ -86,13 +92,7 @@ export default function GroupRoom({ roomId }: GroupRoomProps) {
             />
         )
     }
-console.log({
-  adminId: state.adminId,
-  selfPlayerId,
-  isAdmin,
-  statePlayers: state.players,
-  currPlayer,
-})
+
     return (
         <GroupTriviaGame
             roomId={roomId}
