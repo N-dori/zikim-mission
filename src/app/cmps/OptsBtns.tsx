@@ -32,9 +32,9 @@ export default function OptsBtns({ }: Props) {
         <span className='nav-btn-txt'>עוטף עזה שטח הפקר </span>
       </Link>
 
-      <Link href={'/179trivia'} className='nav-btn flex-jc-ac nav-btn4'>
+      <Link href={'/trivia'} className='nav-btn flex-jc-ac nav-btn4'>
         <Image className='nav-btn-img' src={'/RAM.png'} width={111} height={111} alt={'image of a map'} />
-        <span className='nav-btn-txt'>חידון חטיבה 179</span>
+        <span className='nav-btn-txt'>חידונים</span>
       </Link>
       <div className='filler'></div>
     </main>

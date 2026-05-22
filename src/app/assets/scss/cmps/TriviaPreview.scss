@@ -90,6 +90,18 @@
 
         .explanation-img { width: 100%; border-radius: var(--radius); }
 
+        .explanation-img-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 4 / 3;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 1.5em;
+
+            .explanation-img { object-fit: cover; }
+        }
+
         .next-quetion-btn {
             background: var(--grad-accent);
             width: 100%;
@@ -102,6 +114,97 @@
             cursor: pointer;
             box-shadow: var(--shadow-md);
         }
+    }
+}
+
+.otef-progress {
+    color: var(--text-muted);
+    margin-bottom: 0.5em;
+}
+
+.otef-setup {
+    color: var(--text);
+    gap: 1.25em;
+    padding: 1.25em;
+
+    .otef-setup-lead {
+        font-size: 1.3em;
+        font-weight: 700;
+        margin-bottom: 0.5em;
+    }
+
+    .otef-setup-group {
+        width: 100%;
+        gap: 0.5em;
+        align-items: center;
+    }
+
+    .otef-setup-title {
+        font-size: 1.1em;
+        color: var(--text-muted);
+    }
+
+    .otef-chips {
+        flex-wrap: wrap;
+        gap: 0.5em;
+        justify-content: center;
+    }
+
+    .otef-chip {
+        padding: 0.4em 0.9em;
+        border-radius: 999px;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        color: var(--text);
+        font-weight: 600;
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+
+        &:hover { border-color: var(--accent); }
+
+        &.is-selected {
+            background: var(--grad-accent);
+            border-color: var(--accent-strong);
+            box-shadow: var(--shadow-glow);
+        }
+    }
+
+    .otef-select {
+        width: 100%;
+        max-width: 320px;
+        padding: 0.55em 0.8em;
+        border-radius: var(--radius);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        color: var(--text);
+        font-size: 1.05em;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:focus { outline: none; border-color: var(--accent); box-shadow: var(--shadow-glow); }
+        option { background: var(--surface); color: var(--text); }
+    }
+
+    .otef-setup-note {
+        color: var(--text-muted);
+        min-height: 1.2em;
+    }
+
+    .game-type-btn {
+        width: 100%;
+        border-radius: var(--radius);
+        background: var(--grad-accent);
+        font-size: 1.4em;
+        padding: 0.85em 1em;
+        color: var(--text);
+        border: 1px solid var(--accent-strong);
+        box-shadow: var(--shadow-md);
+        font-weight: 700;
+        cursor: pointer;
+        transition: box-shadow 0.2s;
+
+        &:hover { box-shadow: var(--shadow-lg), var(--shadow-glow); }
+        &:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
     }
 }
 
