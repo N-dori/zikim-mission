@@ -1,7 +1,9 @@
 'use client'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL!
-
+const API_BASE =
+  process.env.NODE_ENV === 'development'
+    ? process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL
+    : process.env.NEXT_PUBLIC_API_BASE_URL
 let cachedToken: string | null = null
 let cachedAt = 0
 let inflight: Promise<string | null> | null = null
@@ -53,6 +55,8 @@ export async function apiFetch(path: string, opts: ApiFetchOptions = {}): Promis
   }
 
   const url = `${API_BASE}${path.startsWith('/') ? path : `/${path}`}`
+  console.log('API_BASE', API_BASE)
+  console.log('FULL URL', url)
   let res = await fetch(url, { ...rest, headers })
 
   // If a previously cached token expired between fetches, refresh once and retry.

@@ -44,7 +44,8 @@ export type UseGameSocketResult = {
 export function useGameSocket(
   roomId: string,
   selfNickName: string | null,
-  selfImg: string | null
+  selfImg: string | null,
+  questionsCount?: number
 ): UseGameSocketResult {
   const [state, dispatch] = useReducer(gameReducer, initialGameState)
   const socketRef = useRef<Socket | null>(null)
@@ -66,7 +67,7 @@ export function useGameSocket(
     let cancelled = false
     let s: Socket | null = null
 
-    const join = { roomId, nickName: selfNickName, img: selfImg }
+    const join = { roomId, nickName: selfNickName, img: selfImg, questionsCount }
 
     const handleConnect = () => {
       if (!s) return
@@ -177,7 +178,7 @@ export function useGameSocket(
       }
       socketRef.current = null
     }
-  }, [roomId, selfNickName, selfImg])
+  }, [roomId, selfNickName, selfImg, questionsCount])
 
   const startGame = useCallback(() => {
     socketRef.current?.emit('startGame')

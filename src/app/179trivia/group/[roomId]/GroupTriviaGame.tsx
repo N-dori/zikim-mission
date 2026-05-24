@@ -7,8 +7,6 @@ import { GroupTriviaGameProps } from '@/app/types/types'
 import Timer from './Timer'
 import ScoreTable from './ScoreTable'
 import FinalScreen from './FinalScreen'
-import { getQuestions } from '@/app/libs/triviaQuestions'
-import { BeatLoader } from 'react-spinners'
 
 export default function GroupTriviaGame({
     roomId,
@@ -16,11 +14,10 @@ export default function GroupTriviaGame({
     actions,
     isAdmin,
     dbPlayerCount,
+    round,
 }: GroupTriviaGameProps) {
 
     const [winHeight, setWinHeight] = useState<{ height: number }>({ height: 450 })
-    const [questions, setQuestions] = useState<Question[] | null>(null)
-    const [loadError, setLoadError] = useState<string | null>(null)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -28,36 +25,8 @@ export default function GroupTriviaGame({
         }
     }, [])
 
-    useEffect(() => {
-        let cancelled = false
-        getQuestions()
-            .then(qs => {
-                if (!cancelled) setQuestions(qs)
-            })
-            .catch(err => {
-                if (!cancelled) setLoadError(String(err))
-            })
-        return () => { cancelled = true }
-    }, [])
-
-    if (loadError) {
-        return (
-            <main className='gc2 flex-col flex-jc-ac'>
-                <p className='tac'>שגיאה בטעינת השאלות</p>
-            </main>
-        )
-    }
-
-    if (!questions) {
-        return (
-            <main className='gc2 flex-col flex-jc-ac'>
-                <BeatLoader color='#308f18' loading={true} size={30} />
-            </main>
-        )
-    }
-
-    const currentQuestion: Question | undefined = questions[state.qIndex]
-    const isLastQuestion = state.qIndex === questions.length - 1
+    const currentQuestion: Question | undefined = round[state.qIndex]
+    const isLastQuestion = state.qIndex === round.length - 1
 
     return (
         <main className='gc2 flex-col flex-sb'>

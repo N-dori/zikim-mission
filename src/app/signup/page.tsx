@@ -24,30 +24,30 @@ function SignupInner() {
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState("")
   const [isVisible, setIsVisible] = useState(false)
-  
+
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams?.get('callbackUrl') || '/menu'
 
   const session = useSession()
 
- useEffect(() => {
+  useEffect(() => {
 
-if(session){
-  if(session?.data?.user?.email){
-    router.push(callbackUrl)
+    if (session) {
+      if (session?.data?.user?.email) {
+        router.push(callbackUrl)
 
+      }
+    }
+  }, [session?.data?.user?.email])
+
+  const handelIsPasswordVisible = () => {
+    setIsVisible(true)
+
+    setTimeout(() => {
+      setIsVisible(false)
+    }, 2000);
   }
-}
- }, [session?.data?.user?.email])
- 
- const handelIsPasswordVisible = () => {
-   setIsVisible(true)
-
-  setTimeout(() => {
-    setIsVisible(false)
-  }, 2000);
- }
 
   const handelSubmit = async (e: any) => {
     e.preventDefault()
@@ -61,18 +61,21 @@ if(session){
       return
     }
     try {
+      console.log(email)
       const userExist = await apiFetch('/users/exists', {
         method: 'POST',
         body: JSON.stringify({ email }),
         auth: false,
       })
-      const { user } = await userExist.json()
-      if (user) {
+      const data = await userExist.json()
+
+      if (data.exists) {
         setError("כתובת האימייל קיימת במערכת")
         return
       }
 
       const res = await apiFetch('/users/register', {
+
         method: 'POST',
         body: JSON.stringify({ name, email, battalion, password }),
         auth: false,
@@ -95,7 +98,7 @@ if(session){
       }
 
     } catch (err) {
-      console.log('had a problom...',err);
+      console.log('had a problom...', err);
 
     }
 
@@ -116,10 +119,10 @@ if(session){
             <option hidden>בחר גדוד</option>
             {battalions.map((bet, i) => <option key={i} value={bet}>{bet}</option>)}
           </select>
-         <div className='password-container grid'>
-          <EyeSvg handelIsPasswordVisible={handelIsPasswordVisible}></EyeSvg>
-          <input onChange={(e) => setPassword(e.target.value)} className='password-input' type={isVisible?'text':'password'} placeholder='סיסמא' ></input>
-          </div> 
+          <div className='password-container grid'>
+            <EyeSvg handelIsPasswordVisible={handelIsPasswordVisible}></EyeSvg>
+            <input onChange={(e) => setPassword(e.target.value)} className='password-input' type={isVisible ? 'text' : 'password'} placeholder='סיסמא' ></input>
+          </div>
           {error && <span className='msg'>{error}</span>}
           <button type='submit' className='signin-btn'>הרשם</button>
         </form>

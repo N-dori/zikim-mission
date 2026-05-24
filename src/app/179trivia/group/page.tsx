@@ -36,7 +36,7 @@ export default async function Group() {
                     <p className='tac'>כדי לפתוח חדר או להצטרף יש להירשם או להתחבר</p>
                     <Link
                         className='open-room-btn'
-                        href={`/auth/login?callbackUrl=${encodeURIComponent('/179trivia/group')}`}
+                        href={`/login?callbackUrl=${encodeURIComponent('/179trivia/group')}`}
                     >
                         כניסה / הרשמה
                     </Link>

@@ -17,6 +17,10 @@ export default function page({ }: Props) {
                     <button type='button' className='game-type-btn'>חידון יישובי העוטף</button>
                 </Link>
 
+                <Link href={'/otef-chronicles'} className='w100'>
+                    <button type='button' className='game-type-btn'>רצועת עזה — חידון היסטורי</button>
+                </Link>
+
             </section>
         </main>
     )

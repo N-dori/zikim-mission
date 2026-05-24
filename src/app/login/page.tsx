@@ -49,8 +49,9 @@ function LoginInner(props: Props) {
         body: JSON.stringify({ email }),
         auth: false,
       })
-      const { user } = await userExist.json()
-      if (!user) {
+      const isUser = await userExist.json()
+      console.log('isUser', isUser)
+      if (!isUser) {
         setError("כתובת המייל לא קיימת יש צורך להירשם")
         return
   
@@ -90,10 +91,44 @@ function LoginInner(props: Props) {
           <button type='submit' className='signin-btn'>התחבר</button>
         </form>
         <p className='signup-link tac'>
-          אין לך חשבון? <Link href={`/auth/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}>הירשם כאן</Link>
+          אין לך חשבון? <Link href={`/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}>הירשם כאן</Link>
         </p>
 
       </section>
     </main>
   )
 }
+/*
+```The real blocker: it's not CORS
+login/page.tsx:47-57 does:
+
+
+const userExist = await apiFetch('/users/exists', ...)
+const { user } = await userExist.json()
+if (!user) { setError("כתובת המייל לא קיימת..."); return }
+But users.js:40 returns { exists: true/false } — there is no user field. So user is always undefined, !user is always true, and every login attempt aborts with "email doesn't exist" before signIn() is ever called. Looks like a network/auth failure but it's a JSON shape mismatch.
+
+Same bug exists in signup/page.tsx:69 — the duplicate-email check is silently broken (the 23505 handler on the server still catches duplicates, so registration is safe, just no nice message).
+
+The actual CORS setup is correct
+server.js:14-26 — parses comma-separated origins, includes OPTIONS, mounts cors() before routes
+Default cors reflects requested headers, so Authorization is fine
+Backend backend/.env includes http://localhost:3000 and the Vercel origin — good
+Bearer-token auth (no cookies), so credentials: true is unused but harmless
+The /users/login call inside authOptions.ts:28 runs server-side — never touches the browser CORS path
+One CORS gotcha worth checking
+zikim-mission/.env.local points the local dev frontend at the deployed Render backend. Render uses its own dashboard env vars, not the local backend/.env. If Render's ALLOWED_ORIGIN is missing http://localhost:3000, every dev request will preflight-fail. I can't see Render config from here — please verify in Render → Environment that ALLOWED_ORIGIN matches the local .env value.
+
+End-point map (no CORS issues in code)
+Endpoint	Auth	Notes
+POST /users/exists	none	shape mismatch with FE (above)
+POST /users/login	none	called server-side by NextAuth, no CORS path
+POST /users/register	none	OK
+PUT /users/progress	none	OK
+GET /users	Bearer	OK
+GET /trivia/questions	Bearer	OK
+POST /trivia/createRoom, /getRoom, /getParticipants, PUT /addPlayer	Bearer	OK
+POST /wiki, /wiki/link	none	OK
+Want me to fix the destructure bug?
+Two-line change in each file — const { user } → const { exists }, then flip the conditions. That'll likely make login work immediately. Should I apply it?```
+*/

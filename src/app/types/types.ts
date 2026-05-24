@@ -162,6 +162,7 @@ export type GroupTriviaGameProps = {
         selfPlayerId: string | null,
         isAdmin: boolean,
         dbPlayerCount?: number | null,
+        round: Question[],
 }
 
 export type TimerProps = {
